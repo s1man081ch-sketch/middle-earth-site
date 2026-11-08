@@ -3,123 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Средиземье | Middle-earth</title>
+    <meta name="theme-color" content="#11130f">
+    <meta name="description" content="Средиземье — Minecraft RP-сервер по мотивам легенд Толкина. Выбери свой народ, вступи в государство и создай собственную историю.">
+    <title>Средиземье — Minecraft RP</title>
     <style>
+        :root {
+            color-scheme: dark;
+            --bg: #11130f;
+            --panel: rgba(25, 27, 21, .88);
+            --gold: #d8b45b;
+            --gold-light: #f0d995;
+            --text: #f4f0e6;
+            --muted: #b9b5a8;
+            --line: rgba(216, 180, 91, .25);
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
             margin: 0;
-            padding: 0;
-            background-color: #1a1a1a;
-            color: #f4f4f4;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-width: 320px;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(103, 84, 42, .18), transparent 48%),
+                var(--bg);
+            color: var(--text);
+            font-family: Georgia, "Times New Roman", serif;
             text-align: center;
         }
-        .banner {
-            width: 100%;
-            height: 400px;
-            background-image: url('banner.jpg');
-            background-size: cover;
-            background-position: center;
-            border-bottom: 4px solid #d4af37;
+
+        a { color: inherit; }
+
+        .hero {
+            min-height: 570px;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 72px 24px 110px;
+            overflow: hidden;
+            isolation: isolate;
+            background: #171812 url("banner.jpg") center 43% / cover no-repeat;
+            border-bottom: 1px solid var(--line);
         }
-        .banner::after {
-            content: '';
+
+        .hero::before {
+            content: "";
             position: absolute;
-            bottom: 0; left: 0; right: 0; top: 0;
-            background: linear-gradient(to top, #1a1a1a 0%, transparent 100%);
+            inset: 0;
+            z-index: -1;
+            background:
+                linear-gradient(180deg, rgba(10, 12, 9, .25), rgba(10, 12, 9, .48) 45%, var(--bg) 100%),
+                linear-gradient(90deg, rgba(10, 12, 9, .35), transparent 50%, rgba(10, 12, 9, .35));
         }
-        .logo {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 4px solid #d4af37;
-            margin-top: -90px;
-            position: relative;
-            z-index: 10;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            background-color: #1a1a1a;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 10;
-        }
-        h1 {
-            color: #d4af37;
-            font-size: 2.5em;
-            margin-top: 10px;
+
+        .eyebrow {
+            margin: 0 0 14px;
+            color: var(--gold-light);
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: .76rem;
+            font-weight: 700;
+            letter-spacing: .32em;
             text-transform: uppercase;
-            letter-spacing: 2px;
         }
-        p {
-            font-size: 1.2em;
-            line-height: 1.6;
-            color: #cccccc;
+
+        .hero h1 {
+            margin: 0;
+            color: #f6e7bd;
+            font-size: clamp(2.8rem, 8vw, 5.8rem);
+            font-weight: 500;
+            letter-spacing: .09em;
+            line-height: 1.05;
+            text-shadow: 0 4px 28px rgba(0, 0, 0, .8);
+            text-transform: uppercase;
         }
-        .buttons {
-            margin-top: 40px;
+
+        .hero-subtitle {
+            max-width: 680px;
+            margin: 22px auto 0;
+            color: #f0eadb;
+            font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+            line-height: 1.7;
+            text-shadow: 0 2px 12px #000;
+        }
+
+        .ornament {
+            width: min(260px, 55vw);
+            height: 1px;
+            margin: 28px auto 0;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .main {
+            width: min(100% - 40px, 980px);
+            margin: -62px auto 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro {
+            padding: 34px clamp(22px, 5vw, 58px) 42px;
+            background: linear-gradient(145deg, rgba(34, 36, 27, .97), rgba(20, 22, 17, .97));
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: 0 22px 70px rgba(0, 0, 0, .42);
+        }
+
+        .logo {
+            display: block;
+            width: 132px;
+            height: 132px;
+            margin: -88px auto 24px;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            border-radius: 50%;
+            background: var(--bg);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .65), 0 0 0 7px rgba(17, 19, 15, .8);
+        }
+
+        .section-label {
+            margin: 0 0 13px;
+            color: var(--gold);
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .25em;
+            text-transform: uppercase;
+        }
+
+        .intro h2 {
+            margin: 0 0 16px;
+            color: var(--gold-light);
+            font-size: clamp(1.65rem, 4vw, 2.25rem);
+            font-weight: 500;
+        }
+
+        .intro p {
+            max-width: 740px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 1.08rem;
+            line-height: 1.85;
+        }
+
+        .server-note {
+            margin-top: 13px !important;
+            color: #d8cdaF !important;
+            font-size: .96rem !important;
+        }
+
+        .actions {
             display: flex;
             justify-content: center;
-            gap: 20px;
             flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 30px;
         }
-        .btn {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            text-decoration: none;
+
+        .button {
+            min-width: 220px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 24px;
+            border: 1px solid transparent;
             border-radius: 8px;
-            font-weight: bold;
-            transition: 0.3s;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: .98rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
         }
-        .btn-download {
-            background-color: #d4af37;
-            color: #1a1a1a;
+
+        .button:hover {
+            transform: translateY(-3px);
         }
-        .btn-download:hover {
-            background-color: #fce28b;
-            transform: scale(1.05);
+
+        .button:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 4px;
         }
-        .btn-discord {
-            background-color: #5865F2;
-            color: white;
+
+        .button-download {
+            color: #17150f;
+            background: linear-gradient(135deg, #f0d995, #c69b3e);
+            box-shadow: 0 8px 24px rgba(190, 145, 48, .2);
         }
-        .btn-discord:hover {
-            background-color: #4752c4;
-            transform: scale(1.05);
+
+        .button-download:hover {
+            background: linear-gradient(135deg, #ffe9ad, #d9b45d);
+            box-shadow: 0 12px 30px rgba(190, 145, 48, .3);
         }
+
+        .button-discord {
+            color: #f5f3ff;
+            background: rgba(88, 101, 242, .14);
+            border-color: rgba(132, 143, 255, .55);
+        }
+
+        .button-discord:hover {
+            background: rgba(88, 101, 242, .28);
+            border-color: #929cff;
+        }
+
         .footer {
-            margin-top: 60px;
-            padding: 20px;
-            font-size: 0.9em;
-            color: #666;
-            border-top: 1px solid #333;
+            margin-top: 64px;
+            padding: 24px 20px 30px;
+            color: #77796e;
+            border-top: 1px solid rgba(216, 180, 91, .13);
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: .82rem;
+            letter-spacing: .04em;
+        }
+
+        .footer span { color: #b69a59; }
+
+        @media (max-width: 600px) {
+            .hero {
+                min-height: 490px;
+                padding: 62px 20px 100px;
+                background-position: center;
+            }
+
+            .hero h1 { letter-spacing: .045em; }
+
+            .main { width: min(100% - 24px, 980px); }
+
+            .intro { padding: 30px 20px 32px; }
+
+            .logo {
+                width: 112px;
+                height: 112px;
+                margin-top: -78px;
+            }
+
+            .intro p { font-size: 1rem; }
+
+            .actions { gap: 11px; }
+
+            .button { width: 100%; min-width: 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { transition-duration: .01ms !important; }
         }
     </style>
 </head>
 <body>
-
-    <div class="banner"></div>
-    
-    <div class="container">
-        <img src="logo.png" alt="Логотип" class="logo">
-        
+    <header class="hero">
+        <p class="eyebrow">История начинается здесь</p>
         <h1>Средиземье</h1>
-        
-        <p>Добро пожаловать в мир, основанный на легендах Толкина. Выбери свою расу, вступи в фракцию и напиши свою историю в Minecraft.</p>
-        <p><i>Наш сервер работает на базе мода Middle-earth (1.21.8).</i></p>
+        <div class="ornament" aria-hidden="true"></div>
+        <p class="hero-subtitle">Мир легенд, древних королевств и великих приключений ждёт тебя.</p>
+    </header>
 
-        <div class="buttons">
-            <a href="https://github.com/s1man081ch-sketch/HeliosLauncher/releases/download/v2.2.1/Middle-earth.Launcher-Setup-2.2.1.exe" class="btn btn-download">⬇️ Скачать лаунчер</a>
-            
-            <a href="https://discord.gg/qJqMGKhY97" class="btn btn-discord">💬 Наш Discord</a>
-        </div>
-    </div>
+    <main class="main">
+        <section class="intro" aria-labelledby="welcome-title">
+            <img src="logo.png" alt="Эмблема сервера Средиземье" class="logo">
+            <p class="section-label">Minecraft Roleplay</p>
+            <h2 id="welcome-title">Твоя история в Средиземье</h2>
+            <p>Добро пожаловать в мир, основанный на легендах Толкина. Выбери свой народ, найди своё место среди великих государств и напиши собственную историю.</p>
+            <p class="server-note">Сервер работает на базе мода Middle-earth · Minecraft 1.21.8</p>
 
-    <div class="footer">
-        © 2026 Средиземье | Minecraft Server. Все права защищены.
-    </div>
+            <div class="actions">
+                <a href="https://github.com/s1man081ch-sketch/HeliosLauncher/releases/download/v2.2.1/Middle-earth.Launcher-Setup-2.2.1.exe" class="button button-download">
+                    <span aria-hidden="true">↓</span> Скачать лаунчер
+                </a>
+                <a href="https://discord.gg/qJqMGKhY97" class="button button-discord">
+                    <span aria-hidden="true">✦</span> Присоединиться к Discord
+                </a>
+            </div>
+        </section>
+    </main>
 
+    <footer class="footer">
+        © 2026 <span>Средиземье</span> · Minecraft Roleplay Server
+    </footer>
 </body>
 </html>
