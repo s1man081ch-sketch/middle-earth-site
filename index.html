@@ -210,48 +210,78 @@
         }
 
 
-        .map-section {
+        .guide {
             margin-top: 34px;
-            padding: 36px clamp(16px, 4vw, 38px) 30px;
-            background: linear-gradient(145deg, rgba(34, 32, 23, .97), rgba(20, 21, 16, .98));
+            padding: 36px clamp(20px, 4vw, 42px) 38px;
+            text-align: left;
+            background: linear-gradient(145deg, rgba(29, 31, 24, .97), rgba(18, 20, 16, .97));
             border: 1px solid var(--line);
             border-radius: 18px;
             box-shadow: 0 18px 55px rgba(0, 0, 0, .25);
         }
 
-        .map-section h2 {
+        .guide h2 {
             margin: 0 0 12px;
             color: var(--gold-light);
             font-size: clamp(1.7rem, 4vw, 2.3rem);
             font-weight: 500;
+            text-align: center;
         }
 
-        .map-description {
-            max-width: 700px;
-            margin: 0 auto 24px;
+        .guide-intro {
+            max-width: 680px;
+            margin: 0 auto 28px;
             color: var(--muted);
             line-height: 1.75;
+            text-align: center;
         }
 
-        .map-frame {
-            overflow: hidden;
-            border: 1px solid rgba(105, 75, 35, .7);
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .guide-step {
+            padding: 20px;
+            background: rgba(255, 255, 255, .025);
+            border: 1px solid rgba(216, 180, 91, .2);
             border-radius: 12px;
-            background: #d8c69a;
-            box-shadow: inset 0 0 35px rgba(76, 52, 24, .25), 0 12px 30px rgba(0, 0, 0, .25);
         }
 
-        .middle-earth-map {
-            display: block;
-            width: 100%;
-            height: auto;
+        .guide-step-number {
+            display: inline-grid;
+            width: 30px;
+            height: 30px;
+            margin-bottom: 12px;
+            place-items: center;
+            color: #17150f;
+            background: var(--gold);
+            border-radius: 50%;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-weight: 800;
         }
 
-        .map-caption {
-            margin: 14px 0 0;
-            color: #aaa18d;
-            font-size: .82rem;
-            line-height: 1.6;
+        .guide-step h3 {
+            margin: 0 0 9px;
+            color: var(--gold-light);
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+
+        .guide-step p {
+            margin: 0;
+            color: var(--muted);
+            font-size: .96rem;
+            line-height: 1.7;
+        }
+
+        .guide-note {
+            margin: 22px 0 0;
+            color: #d8cdaf;
+            font-size: .9rem;
+            line-height: 1.65;
+            text-align: center;
         }
 
         .footer {
@@ -324,81 +354,39 @@
             </div>
         </section>
 
-        <section class="map-section" aria-labelledby="map-title">
-            <p class="section-label">Атлас Средиземья</p>
-            <h2 id="map-title">Земли, где рождаются легенды</h2>
-            <p class="map-description">Открой для себя знакомые края Средиземья — от западных земель эльфов до восточных рубежей и владений Тьмы.</p>
-            <div class="map-frame">
-                <svg class="middle-earth-map" viewBox="0 0 1000 610" role="img" aria-labelledby="map-svg-title map-svg-desc" xmlns="http://www.w3.org/2000/svg">
-                    <title id="map-svg-title">Схематическая карта Средиземья</title>
-                    <desc id="map-svg-desc">Стилизованная карта с обозначениями Шира, Ривенделла, Лихолесья, Эребора, Рохана, Гондора и Мордора.</desc>
-                    <defs>
-                        <pattern id="paper-grain" width="42" height="42" patternUnits="userSpaceOnUse">
-                            <circle cx="7" cy="9" r="1.2" fill="#806b43" opacity=".18"/>
-                            <circle cx="29" cy="31" r=".9" fill="#806b43" opacity=".14"/>
-                            <path d="M0 21 Q12 17 22 22 T42 20" fill="none" stroke="#9c8250" stroke-width=".7" opacity=".12"/>
-                        </pattern>
-                        <filter id="map-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="7"/>
-                        </filter>
-                    </defs>
-                    <rect width="1000" height="610" fill="#d8c69a"/>
-                    <rect width="1000" height="610" fill="url(#paper-grain)"/>
-                    <rect x="17" y="17" width="966" height="576" rx="8" fill="none" stroke="#80683d" stroke-width="3"/>
-                    <rect x="25" y="25" width="950" height="560" rx="5" fill="none" stroke="#a58a55" stroke-width="1.5"/>
-                    <g fill="none" stroke="#7b9b91" stroke-width="3" opacity=".65">
-                        <path d="M30 120 Q115 90 190 135 T330 120 Q405 95 465 130"/>
-                        <path d="M50 475 Q160 430 250 475 T430 460"/>
-                        <path d="M650 70 Q750 105 835 75 T970 95"/>
-                        <path d="M720 520 Q820 485 965 525"/>
-                    </g>
-                    <g fill="#9a895f" stroke="#79633e" stroke-width="2" opacity=".9">
-                        <path d="M100 185 L145 115 195 150 230 120 270 180 245 235 195 250 160 225 125 245Z"/>
-                        <path d="M320 75 L365 48 405 78 390 125 350 135 315 110Z"/>
-                        <path d="M420 160 L460 112 500 130 520 180 485 220 445 205Z"/>
-                        <path d="M610 100 L655 55 700 85 730 145 695 185 650 165Z"/>
-                        <path d="M780 300 L825 260 875 280 900 330 865 370 810 355Z"/>
-                        <path d="M350 390 L390 350 435 365 450 420 415 455 370 440Z"/>
-                    </g>
-                    <g fill="#61745a" opacity=".9">
-                        <path d="M180 275 Q220 240 260 270 L285 330 245 360 205 340Z"/>
-                        <path d="M535 250 Q575 220 610 250 L625 315 590 345 550 320Z"/>
-                        <path d="M690 205 Q730 180 760 215 L770 270 735 290 700 260Z"/>
-                    </g>
-                    <g fill="none" stroke="#8a6b3e" stroke-width="3" stroke-linecap="round" opacity=".8">
-                        <path d="M255 305 Q350 260 440 300 T610 290 Q700 315 810 330"/>
-                        <path d="M430 300 Q470 360 520 400 T620 465"/>
-                        <path d="M250 305 Q230 380 280 445"/>
-                    </g>
-                    <g fill="#5a452b" font-family="Georgia,serif" text-anchor="middle">
-                        <text x="150" y="75" font-size="25" font-style="italic">СЕВЕРО-ЗАПАД</text>
-                        <text x="825" y="555" font-size="22" font-style="italic">ВОСТОЧНЫЕ ЗЕМЛИ</text>
-                        <text x="500" y="570" font-size="18" letter-spacing="5">СРЕДИЗЕМЬЕ</text>
-                    </g>
-                    <g fill="#49351f" font-family="Georgia,serif" font-size="22" font-weight="bold" text-anchor="middle">
-                        <circle cx="190" cy="300" r="7" fill="#8a4f32" stroke="#f1dfb5" stroke-width="3"/>
-                        <text x="190" y="285">Шир</text>
-                        <circle cx="350" cy="245" r="7" fill="#8a4f32" stroke="#f1dfb5" stroke-width="3"/>
-                        <text x="350" y="230">Ривенделл</text>
-                        <circle cx="580" cy="205" r="7" fill="#8a4f32" stroke="#f1dfb5" stroke-width="3"/>
-                        <text x="580" y="190">Лихолесье</text>
-                        <circle cx="690" cy="135" r="7" fill="#8a4f32" stroke="#f1dfb5" stroke-width="3"/>
-                        <text x="690" y="120">Эребор</text>
-                        <circle cx="490" cy="365" r="7" fill="#8a4f32" stroke="#f1dfb5" stroke-width="3"/>
-                        <text x="490" y="350">Рохан</text>
-                        <circle cx="405" cy="470" r="7" fill="#8a4f32" stroke="#f1dfb5" stroke-width="3"/>
-                        <text x="405" y="455">Гондор</text>
-                        <circle cx="745" cy="390" r="7" fill="#8a4f32" stroke="#f1dfb5" stroke-width="3"/>
-                        <text x="745" y="375">Мордор</text>
-                    </g>
-                    <g transform="translate(900 105)" fill="none" stroke="#654c2c" stroke-width="3">
-                        <path d="M0 50 L18 0 36 50 18 39Z" fill="#654c2c"/>
-                        <path d="M18 0 V70"/>
-                        <text x="18" y="91" fill="#654c2c" stroke="none" font-family="Georgia,serif" font-size="17" text-anchor="middle">С</text>
-                    </g>
-                </svg>
+        <section class="guide" aria-labelledby="guide-title">
+            <p class="section-label" style="text-align:center">Путеводитель игрока</p>
+            <h2 id="guide-title">Правила и начало игры</h2>
+            <p class="guide-intro">Всего несколько шагов отделяют тебя от приключения в Средиземье.</p>
+
+            <div class="guide-steps">
+                <article class="guide-step">
+                    <span class="guide-step-number">1</span>
+                    <h3>Скачай лаунчер</h3>
+                    <p>Нажми кнопку «Скачать лаунчер» выше и загрузи установщик Middle-earth Launcher на компьютер.</p>
+                </article>
+                <article class="guide-step">
+                    <span class="guide-step-number">2</span>
+                    <h3>Установи и запусти</h3>
+                    <p>Открой скачанный установщик, следуй инструкциям на экране, затем запусти лаунчер.</p>
+                </article>
+                <article class="guide-step">
+                    <span class="guide-step-number">3</span>
+                    <h3>Подготовь игру</h3>
+                    <p>В лаунчере выбери подготовленный профиль Middle-earth для Minecraft 1.21.8 и дождись завершения загрузки необходимых файлов.</p>
+                </article>
+                <article class="guide-step">
+                    <span class="guide-step-number">4</span>
+                    <h3>Подключись к серверу</h3>
+                    <p>Запусти игру через лаунчер и подключись к серверу, используя адрес из официального Discord.</p>
+                </article>
+                <article class="guide-step">
+                    <span class="guide-step-number">5</span>
+                    <h3>Начни приключение</h3>
+                    <p>Ознакомься с правилами, выбери свой путь, познакомься с другими игроками и стань частью истории Средиземья.</p>
+                </article>
             </div>
-            <p class="map-caption">Схематическая художественная карта для знакомства с миром. Не является точной географической картой.</p>
+            <p class="guide-note">Есть вопросы? Заходи в наш Discord — там можно получить помощь с установкой и подключением.</p>
         </section>
     </main>
 
