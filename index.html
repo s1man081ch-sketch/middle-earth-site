@@ -455,6 +455,64 @@
             .gollum-whisper { transition: none; }
         }
 
+        .palantir-overlay {
+            position: fixed; inset: 0; z-index: 40; display: grid; place-items: center;
+            padding: 22px; overflow-y: auto;
+            background: radial-gradient(ellipse at center, rgba(26, 31, 48, .78), rgba(3, 5, 12, .94) 72%);
+            backdrop-filter: blur(9px); opacity: 0; visibility: hidden;
+            transition: opacity .45s ease, visibility .45s ease;
+        }
+        .palantir-overlay.is-visible { opacity: 1; visibility: visible; }
+        .palantir-dialog {
+            position: relative; width: min(100%, 480px); padding: 36px 28px 32px;
+            color: #e8e7f3; text-align: center;
+            background: linear-gradient(155deg, rgba(24, 30, 48, .97), rgba(8, 11, 22, .98));
+            border: 1px solid rgba(151, 174, 220, .55); border-radius: 18px;
+            box-shadow: 0 0 55px rgba(91, 130, 204, .2), 0 24px 80px rgba(0,0,0,.7);
+            transform: translateY(16px) scale(.97); transition: transform .45s ease;
+        }
+        .palantir-overlay.is-visible .palantir-dialog { transform: translateY(0) scale(1); }
+        .palantir-close {
+            position: absolute; top: 10px; right: 14px; padding: 5px 9px;
+            color: #cbd4e8; background: transparent; border: 0; font-size: 1.5rem; cursor: pointer;
+        }
+        .palantir-orb {
+            position: relative; width: 156px; height: 156px; margin: 0 auto 25px;
+            overflow: hidden; border: 2px solid rgba(185, 205, 242, .72); border-radius: 50%;
+            background:
+                radial-gradient(ellipse at 35% 28%, rgba(220, 237, 255, .95), transparent 9%),
+                radial-gradient(ellipse at 55% 58%, #b9d5f4 0%, #547eb4 17%, #172d57 43%, #080d20 72%);
+            box-shadow: inset -18px -18px 35px rgba(0,0,0,.78), inset 8px 7px 24px rgba(194,220,255,.35),
+                0 0 22px rgba(125,166,232,.75), 0 0 65px rgba(87,133,210,.38);
+            animation: palantir-float 4s ease-in-out infinite;
+        }
+        .palantir-orb::before {
+            content: ""; position: absolute; inset: -35%;
+            background: conic-gradient(from 20deg, transparent, rgba(196,222,255,.08), transparent 28%, rgba(166,201,255,.48), transparent 48%);
+            animation: palantir-turn 9s linear infinite;
+        }
+        .palantir-orb::after {
+            content: ""; position: absolute; width: 48px; height: 48px; left: 53px; top: 51px;
+            border-radius: 50%; background: radial-gradient(circle, #fff 0%, #c7e1ff 13%, rgba(102,159,240,.65) 38%, transparent 72%);
+            filter: blur(3px); box-shadow: 0 0 30px 12px rgba(132,181,255,.55);
+            animation: palantir-glow 2.4s ease-in-out infinite alternate;
+        }
+        .palantir-dialog h2 {
+            margin: 0 0 13px; color: #c8dcff; font-size: 1.65rem; font-weight: 500;
+            letter-spacing: .08em; text-transform: uppercase;
+        }
+        .palantir-dialog p { margin: 0; color: #d5d9e8; font-size: 1.05rem; line-height: 1.8; font-style: italic; }
+        .palantir-hint { margin-top: 19px !important; color: #8e9bb8 !important; font: .72rem "Segoe UI", Arial, sans-serif !important; letter-spacing: .18em; text-transform: uppercase; }
+        .hero h1 { cursor: pointer; }
+        .hero h1:focus-visible { outline: 2px solid #c8dcff; outline-offset: 9px; border-radius: 4px; }
+        @keyframes palantir-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+        @keyframes palantir-turn { to { transform: rotate(360deg); } }
+        @keyframes palantir-glow { from { opacity: .55; transform: scale(.85); } to { opacity: 1; transform: scale(1.12); } }
+        @media (prefers-reduced-motion: reduce) {
+            .palantir-overlay, .palantir-dialog { transition: none; }
+            .palantir-orb, .palantir-orb::before, .palantir-orb::after { animation: none; }
+        }
+
         .footer {
             margin-top: 64px;
             padding: 24px 20px 30px;
@@ -597,8 +655,66 @@
         <div class="gollum-copy"><strong>Голлум</strong><span>«Моя прелесть…»</span></div>
         <button class="gollum-close" id="gollum-close" type="button" aria-label="Закрыть">×</button>
     </aside>
+    <div class="palantir-overlay" id="palantir-overlay" aria-hidden="true">
+        <div class="palantir-dialog" role="dialog" aria-modal="true" aria-labelledby="palantir-title">
+            <button class="palantir-close" id="palantir-close" type="button" aria-label="Закрыть">×</button>
+            <div class="palantir-orb" aria-hidden="true"></div>
+            <h2 id="palantir-title">Видение Палantира</h2>
+            <p id="palantir-prophecy">Туман скрывает грядущие события…</p>
+            <p class="palantir-hint">Не всякое будущее открывается взору</p>
+        </div>
+    </div>
     <script>
         (() => {
+            const palantirTitle = document.querySelector(".hero h1");
+            const palantirOverlay = document.getElementById("palantir-overlay");
+            const palantirClose = document.getElementById("palantir-close");
+            const palantirProphecy = document.getElementById("palantir-prophecy");
+            const prophecies = [
+                "Когда народы Средиземья объединятся, древние земли вновь услышат шаги героев. Но союз будет испытан первой же бурей.",
+                "На востоке поднимется новая сила, а на западе вспыхнут огни надежды. Судьба королевств окажется в руках тех, кто осмелится действовать.",
+                "Клинки ещё не обнажены, но тени уже движутся. Грядущая война изменит границы и перепишет летописи Средиземья.",
+                "Там, где сегодня лежат руины, однажды вновь зазвучат голоса. Забытая крепость станет началом новой эпохи.",
+                "Корона найдёт достойного правителя, а верность будет ценнее золота. Так начнётся история, которую будут помнить поколения."
+            ];
+            let palantirClicks = 0;
+            let palantirClickTimer;
+            function openPalantir() {
+                palantirProphecy.textContent = prophecies[Math.floor(Math.random() * prophecies.length)];
+                palantirOverlay.classList.add("is-visible");
+                palantirOverlay.setAttribute("aria-hidden", "false");
+            }
+            function closePalantir() {
+                palantirOverlay.classList.remove("is-visible");
+                palantirOverlay.setAttribute("aria-hidden", "true");
+            }
+            palantirTitle.tabIndex = 0;
+            palantirTitle.setAttribute("role", "button");
+            palantirTitle.setAttribute("aria-label", "Тайна Палantира. Нажми три раза");
+            palantirTitle.addEventListener("click", () => {
+                palantirClicks += 1;
+                clearTimeout(palantirClickTimer);
+                if (palantirClicks >= 3) {
+                    palantirClicks = 0;
+                    openPalantir();
+                } else {
+                    palantirClickTimer = setTimeout(() => { palantirClicks = 0; }, 1800);
+                }
+            });
+            palantirTitle.addEventListener("keydown", event => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    palantirTitle.click();
+                }
+            });
+            palantirClose.addEventListener("click", closePalantir);
+            palantirOverlay.addEventListener("click", event => {
+                if (event.target === palantirOverlay) closePalantir();
+            });
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape") closePalantir();
+            });
+
             const logo = document.querySelector(".logo");
             const ringOverlay = document.getElementById("ring-easter-egg");
             const ringClose = document.getElementById("ring-close");
