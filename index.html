@@ -459,13 +459,6 @@
             }
             setSide(localStorage.getItem("middle-earth-side") === "dark" ? "dark" : "light");
             button.addEventListener("click", () => setSide(document.body.dataset.side === "dark" ? "light" : "dark"));
-
-                filter.addEventListener("click", () => {
-                    const category = filter.dataset.filter;
-                        entry.hidden = category !== "all" && entry.dataset.category !== category;
-                    });
-                });
-            });
         })();
     </script>
 </body>
