@@ -118,7 +118,7 @@
         @keyframes gandalf-wheel-spin { to { transform: rotate(360deg); } }
 
         .gandalf-fireworks {
-            position: absolute; inset: 0; z-index: 5; overflow: hidden;
+            position: absolute !important; inset: 0; z-index: 5; overflow: hidden;
             display: grid; place-items: center; align-content: center; gap: 12px;
             opacity: 0; visibility: hidden; pointer-events: none;
             background: radial-gradient(ellipse at 50% 80%, rgba(255,173,57,.24), transparent 58%);
@@ -935,9 +935,7 @@
                 gandalfCart.style.animation = "none";
                 void gandalfCart.offsetWidth;
                 gandalfCart.style.animation = "";
-                setTimeout(() => {
-                    if (!gandalfCart.matches(":hover")) gandalfCart.hidden = true;
-                }, 11500);
+                setTimeout(() => { gandalfCart.hidden = true; }, 11200);
                 setTimeout(() => { gandalfCooldown = false; }, 14000);
             }
             gandalfCart.addEventListener("click", () => {
