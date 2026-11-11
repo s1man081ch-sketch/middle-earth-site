@@ -878,7 +878,6 @@
             let gollumVisible = false;
 
             function hideGollum() {
-                clearTimeout(gollumMessageTimer);
                 clearTimeout(gollumHideTimer);
                 gollumVisible = false;
                 gollumWhisper.classList.remove("is-visible");
@@ -903,8 +902,8 @@
                     gollumWhisper.setAttribute("aria-hidden", "false");
                 }
                 clearTimeout(gollumHideTimer);
-                gollumHideTimer = setTimeout(hideGollum, 3000);
-                gollumMessageTimer = setTimeout(showGollum, 10000);
+                gollumHideTimer = setTimeout(hideGollum, 4000);
+                gollumMessageTimer = setTimeout(showGollum, 5000);
             }
 
             function resetInactivityTimer() {
@@ -912,7 +911,7 @@
                 clearTimeout(gollumMessageTimer);
                 clearTimeout(gollumHideTimer);
                 if (gollumVisible) hideGollum();
-                inactivityTimer = setTimeout(showGollum, 10000);
+                inactivityTimer = setTimeout(showGollum, 5000);
             }
 
             ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
