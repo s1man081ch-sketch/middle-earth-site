@@ -873,12 +873,11 @@
             ];
             let inactivityTimer;
             let gollumHideTimer;
-            let bilboReplyTimer;
             let lastGollumDialogue = -1;
             let gollumVisible = false;
+            let currentGollumDialogue = null;
             function hideGollum() {
                 clearTimeout(gollumHideTimer);
-                clearTimeout(bilboReplyTimer);
                 gollumVisible = false;
                 gollumWhisper.classList.remove("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "true");
@@ -889,28 +888,25 @@
                     nextDialogue = (nextDialogue + 1 + Math.floor(Math.random() * (gollumDialogues.length - 1))) % gollumDialogues.length;
                 }
                 lastGollumDialogue = nextDialogue;
-                const dialogue = gollumDialogues[nextDialogue];
+                currentGollumDialogue = gollumDialogues[nextDialogue];
                 gollumSpeaker.textContent = "Голлум";
                 gollumPortrait.classList.remove("bilbo-portrait");
-                gollumPhrase.textContent = dialogue[0];
+                gollumPhrase.textContent = currentGollumDialogue[0];
                 gollumVisible = true;
                 gollumWhisper.classList.add("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "false");
-                bilboReplyTimer = setTimeout(() => {
-                    if (!gollumVisible) return;
-                    gollumSpeaker.textContent = "Бильбо Бэггинс";
-                    gollumPortrait.classList.add("bilbo-portrait");
-                    gollumPhrase.textContent = dialogue[1];
-                }, 8000);
-                gollumHideTimer = setTimeout(() => {
-                    hideGollum();
-                    resetInactivityTimer();
-                }, 16000);
+                gollumHideTimer = setTimeout(showBilbo, 8000);
+            }
+            function showBilbo() {
+                if (!gollumVisible || !currentGollumDialogue) return;
+                gollumSpeaker.textContent = "Бильбо Бэггинс";
+                gollumPortrait.classList.add("bilbo-portrait");
+                gollumPhrase.textContent = currentGollumDialogue[1];
+                gollumHideTimer = setTimeout(showGollum, 8000);
             }
             function resetInactivityTimer() {
                 clearTimeout(inactivityTimer);
                 clearTimeout(gollumHideTimer);
-                clearTimeout(bilboReplyTimer);
                 if (gollumVisible) hideGollum();
                 inactivityTimer = setTimeout(showGollum, 5000);
             }
