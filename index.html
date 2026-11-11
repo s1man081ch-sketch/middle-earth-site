@@ -201,6 +201,52 @@
             88% { opacity: 1; }
             100% { left: calc(100% + 260px); opacity: 0; transform: translateY(-5px) scale(1.02); }
         }
+        /* Treebeard easter egg */
+        .treebeard-encounter {
+            position: absolute !important; inset: auto 0 0; z-index: 8;
+            min-height: 210px; display: flex; align-items: flex-end; justify-content: center;
+            gap: clamp(10px, 3vw, 34px); padding: 0 24px 12px;
+            pointer-events: none; opacity: 0; visibility: hidden;
+            background: linear-gradient(0deg, rgba(8,15,9,.88), rgba(8,15,9,.48) 62%, transparent);
+            transition: opacity 1.6s ease, visibility 1.6s ease;
+        }
+        .treebeard-encounter.is-visible { opacity: 1; visibility: visible; }
+        .treebeard-figure {
+            flex: 0 0 auto; width: clamp(105px, 18vw, 175px); height: clamp(145px, 24vw, 220px);
+            transform-origin: 50% 100%; filter: drop-shadow(0 0 18px rgba(111,151,83,.32));
+        }
+        .treebeard-figure svg { display:block; width:100%; height:100%; overflow:visible; }
+        .treebeard-copy {
+            width: min(540px, 62vw); padding: 18px 22px 20px; margin-bottom: 18px;
+            text-align: left; color: #e6e0c5; background: rgba(13,22,14,.78);
+            border: 1px solid rgba(164,185,119,.42); border-radius: 12px;
+            box-shadow: 0 8px 34px rgba(0,0,0,.35); backdrop-filter: blur(7px);
+        }
+        .treebeard-copy strong {
+            display:block; margin-bottom:8px; color:#c4d69a;
+            font:700 .78rem "Segoe UI",Arial,sans-serif; letter-spacing:.2em; text-transform:uppercase;
+        }
+        .treebeard-copy p {
+            min-height: 3.2em; margin:0; color:#f0ead5;
+            font: 1.02rem/1.65 Georgia,"Times New Roman",serif;
+        }
+        .treebeard-encounter.is-visible .treebeard-figure { animation: treebeard-awaken 2.2s ease both; }
+        @keyframes treebeard-awaken {
+            0% { opacity:0; transform:translateY(28px) scale(.92); }
+            55% { opacity:1; transform:translateY(-5px) scale(1.02); }
+            100% { opacity:1; transform:translateY(0) scale(1); }
+        }
+        @media (max-width: 560px) {
+            .treebeard-encounter { min-height:190px; gap:8px; padding:0 10px 10px; }
+            .treebeard-figure { width:95px; height:140px; }
+            .treebeard-copy { width:calc(100% - 105px); padding:12px; margin-bottom:10px; }
+            .treebeard-copy p { font-size:.9rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .treebeard-encounter { transition:none; }
+            .treebeard-encounter.is-visible .treebeard-figure { animation:none; }
+        }
+
         .side-switch {
             position: absolute; top: 22px; right: 24px; z-index: 3;
             padding: 11px 16px; color: #f6e7bd; background: rgba(12, 14, 11, .78);
@@ -772,6 +818,37 @@
                 </svg>
             </div>
         </div>
+        <div class="treebeard-encounter" id="treebeard-encounter" aria-hidden="true">
+            <div class="treebeard-figure" aria-hidden="true">
+                <svg viewBox="0 0 180 230" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="ent-bark" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#9b8050"/><stop offset=".52" stop-color="#594a30"/><stop offset="1" stop-color="#302d20"/>
+                        </linearGradient>
+                        <radialGradient id="ent-leaf"><stop stop-color="#a9bd70"/><stop offset="1" stop-color="#405c35"/></radialGradient>
+                    </defs>
+                    <g stroke="#302d20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M87 92 Q62 60 43 37 M92 82 Q111 47 139 27 M75 91 Q45 83 25 64 M106 88 Q139 77 158 57" fill="none" stroke="#765d39" stroke-width="12"/>
+                        <path d="M88 78 Q57 54 43 34 M104 76 Q122 42 142 28" fill="none" stroke="#a18a57" stroke-width="5"/>
+                        <path d="M55 48 Q24 47 25 25 Q44 8 63 28 Q77 8 91 28 Q87 51 55 48Z" fill="url(#ent-leaf)"/>
+                        <path d="M127 39 Q113 14 135 7 Q157 9 158 29 Q176 23 178 43 Q156 58 127 39Z" fill="url(#ent-leaf)"/>
+                        <path d="M22 77 Q5 57 18 44 Q40 41 47 63 Q40 82 22 77Z" fill="url(#ent-leaf)"/>
+                        <path d="M62 91 Q48 104 53 145 L42 192 Q56 205 79 192 L91 166 L105 197 Q129 204 141 190 L121 142 Q133 105 111 87 Q86 73 62 91Z" fill="url(#ent-bark)"/>
+                        <path d="M62 111 Q78 121 91 111 Q105 122 119 108" fill="none" stroke="#b09a68" stroke-width="4"/>
+                        <path d="M69 130 Q77 123 85 130 M101 130 Q109 123 116 130" fill="none" stroke="#1d2118" stroke-width="6"/>
+                        <path d="M87 133 Q83 145 94 148" fill="none" stroke="#c0a477" stroke-width="4"/>
+                        <path d="M84 157 Q99 164 111 154" fill="none" stroke="#28251c" stroke-width="5"/>
+                        <path d="M60 187 Q43 203 26 216 M60 190 Q65 211 57 225 M118 189 Q137 204 153 216 M119 190 Q111 213 121 225" fill="none" stroke="#765d39" stroke-width="9"/>
+                        <path d="M70 96 Q57 119 61 145 M112 96 Q125 121 118 145" fill="none" stroke="#b09a68" stroke-width="3"/>
+                    </g>
+                    <g fill="#9aaf68"><circle cx="35" cy="28" r="5"/><circle cx="145" cy="20" r="5"/><circle cx="19" cy="58" r="4"/></g>
+                </svg>
+            </div>
+            <div class="treebeard-copy">
+                <strong>Древобород</strong>
+                <p id="treebeard-phrase" aria-live="polite"></p>
+            </div>
+        </div>
         <button class="gandalf-cart" id="gandalf-cart" type="button" aria-label="Попасть в Гэндальфа фейерверком" hidden>
             <span class="gandalf-wizard" aria-hidden="true">🧙🏻‍♂️</span>
             <span class="gandalf-cart-body" aria-hidden="true"><span class="cart-load">✦</span></span>
@@ -1035,6 +1112,51 @@
                 nazgulHoverTimer = setTimeout(summonNazgul, 10000);
             });
             logo.addEventListener("pointerleave", () => clearTimeout(nazgulHoverTimer));
+            const treebeardEncounter = document.getElementById("treebeard-encounter");
+            const treebeardPhrase = document.getElementById("treebeard-phrase");
+            const treebeardPhrases = [
+                "«Хм-м-м… Давненько я не встречал здесь путников. Очень давненько…»",
+                "«Не стоит торопиться. Не стоит… Даже деревьям нужно время, чтобы подумать.»",
+                "«Хуорн… Хуорн… Где же вы? Лес сегодня хранит слишком много тайн.»",
+                "«Средиземье меняется, маленький друг. Но корни помнят всё.»",
+                "«Слишком много топоров звенит в этих землях… Надеюсь, ты пришёл с миром.»",
+                "«Хм! Я не спешу. Спешка редко приводит к хорошим историям.»"
+            ];
+            let treebeardIdleTimer;
+            let treebeardHideTimer;
+            let treebeardTypingTimer;
+            let treebeardPhraseIndex = -1;
+            function hideTreebeard() {
+                clearTimeout(treebeardHideTimer);
+                clearInterval(treebeardTypingTimer);
+                treebeardEncounter.classList.remove("is-visible");
+                treebeardEncounter.setAttribute("aria-hidden", "true");
+            }
+            function awakenTreebeard() {
+                let next = Math.floor(Math.random() * treebeardPhrases.length);
+                if (treebeardPhrases.length > 1 && next === treebeardPhraseIndex) next = (next + 1) % treebeardPhrases.length;
+                treebeardPhraseIndex = next;
+                const phrase = treebeardPhrases[next];
+                treebeardPhrase.textContent = "";
+                treebeardEncounter.classList.add("is-visible");
+                treebeardEncounter.setAttribute("aria-hidden", "false");
+                let position = 0;
+                treebeardTypingTimer = setInterval(() => {
+                    treebeardPhrase.textContent = phrase.slice(0, ++position);
+                    if (position >= phrase.length) clearInterval(treebeardTypingTimer);
+                }, 72);
+                treebeardHideTimer = setTimeout(hideTreebeard, 12500);
+            }
+            function resetTreebeardIdleTimer() {
+                clearTimeout(treebeardIdleTimer);
+                if (treebeardEncounter.classList.contains("is-visible")) hideTreebeard();
+                treebeardIdleTimer = setTimeout(awakenTreebeard, 60000);
+            }
+            ["pointermove", "pointerdown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
+                document.addEventListener(eventName, resetTreebeardIdleTimer, { passive: true });
+            });
+            resetTreebeardIdleTimer();
+
             logo.addEventListener("pointerdown", prepareHoofAudio);
             const gandalfCart = document.getElementById("gandalf-cart");
             const gandalfFireworks = document.getElementById("gandalf-fireworks");
