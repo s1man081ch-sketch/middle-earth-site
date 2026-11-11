@@ -453,7 +453,7 @@
             background: #9b684b; border-radius: 50%;
             box-shadow: 0 15px 0 3px #344b31;
         }
-        .gollum-copy { min-width: 0; opacity: 1; transform: translateY(0) scale(1); filter: blur(0); transition: opacity .35s ease, transform .35s ease, filter .35s ease; }
+        .gollum-copy { min-width: 0; }
         .gollum-copy strong {
             display: block; margin-bottom: 5px; color: #c9d0a5;
             font: 700 .72rem "Segoe UI", Arial, sans-serif; letter-spacing: .16em;
@@ -873,36 +873,15 @@
             ];
             let inactivityTimer;
             let gollumHideTimer;
-            let messageSwapTimer;
+            let bilboReplyTimer;
             let lastGollumDialogue = -1;
             let gollumVisible = false;
-            let currentGollumDialogue = null;
-            const gollumCopy = gollumWhisper.querySelector(".gollum-copy");
             function hideGollum() {
                 clearTimeout(gollumHideTimer);
-                clearTimeout(messageSwapTimer);
+                clearTimeout(bilboReplyTimer);
                 gollumVisible = false;
                 gollumWhisper.classList.remove("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "true");
-            }
-            function displayDialogueMessage(speaker, phrase, isBilbo) {
-                clearTimeout(messageSwapTimer);
-                gollumCopy.style.opacity = "0";
-                gollumCopy.style.transform = "translateY(10px) scale(.98)";
-                gollumCopy.style.filter = "blur(3px)";
-                messageSwapTimer = setTimeout(() => {
-                    if (!gollumVisible) return;
-                    gollumSpeaker.textContent = speaker;
-                    gollumPhrase.textContent = phrase;
-                    gollumPortrait.classList.toggle("bilbo-portrait", isBilbo);
-                    gollumCopy.style.transform = "translateY(-8px) scale(.98)";
-                    requestAnimationFrame(() => {
-                        if (!gollumVisible) return;
-                        gollumCopy.style.opacity = "1";
-                        gollumCopy.style.transform = "translateY(0) scale(1)";
-                        gollumCopy.style.filter = "blur(0)";
-                    });
-                }, 350);
             }
             function showGollum() {
                 let nextDialogue = Math.floor(Math.random() * gollumDialogues.length);
@@ -910,24 +889,30 @@
                     nextDialogue = (nextDialogue + 1 + Math.floor(Math.random() * (gollumDialogues.length - 1))) % gollumDialogues.length;
                 }
                 lastGollumDialogue = nextDialogue;
-                currentGollumDialogue = gollumDialogues[nextDialogue];
+                const dialogue = gollumDialogues[nextDialogue];
+                gollumSpeaker.textContent = "Голлум";
+                gollumPortrait.classList.remove("bilbo-portrait");
+                gollumPhrase.textContent = dialogue[0];
                 gollumVisible = true;
                 gollumWhisper.classList.add("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "false");
-                displayDialogueMessage("Голлум", currentGollumDialogue[0], false);
-                gollumHideTimer = setTimeout(showBilbo, 5000);
-            }
-            function showBilbo() {
-                if (!gollumVisible || !currentGollumDialogue) return;
-                displayDialogueMessage("Бильбо Бэггинс", currentGollumDialogue[1], true);
-                gollumHideTimer = setTimeout(showGollum, 5000);
+                bilboReplyTimer = setTimeout(() => {
+                    if (!gollumVisible) return;
+                    gollumSpeaker.textContent = "Бильбо Бэггинс";
+                    gollumPortrait.classList.add("bilbo-portrait");
+                    gollumPhrase.textContent = dialogue[1];
+                }, 2200);
+                gollumHideTimer = setTimeout(() => {
+                    hideGollum();
+                    resetInactivityTimer();
+                }, 5200);
             }
             function resetInactivityTimer() {
                 clearTimeout(inactivityTimer);
                 clearTimeout(gollumHideTimer);
-                clearTimeout(messageSwapTimer);
+                clearTimeout(bilboReplyTimer);
                 if (gollumVisible) hideGollum();
-                inactivityTimer = setTimeout(showGollum, 5000);
+                inactivityTimer = setTimeout(showGollum, 10000);
             }
             ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
                 document.addEventListener(eventName, resetInactivityTimer, { passive: true });
