@@ -16,7 +16,6 @@
             --text: #f4f0e6;
             --muted: #b9b5a8;
             --line: rgba(216, 180, 91, .25);
-            --hero-image: url("banner.jpg");
         }
 
         * { box-sizing: border-box; }
@@ -46,19 +45,34 @@
             padding: 72px 24px 110px;
             overflow: hidden;
             isolation: isolate;
-            background: #171812 var(--hero-image) center 43% / cover no-repeat;
+            background: #171812 url("banner.jpg") center 43% / cover no-repeat;
             border-bottom: 1px solid var(--line);
         }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: url("banner-dark.png") center 43% / cover no-repeat;
+            opacity: 0;
+            transition: opacity .9s ease-in-out;
+            pointer-events: none;
+        }
+
+        body[data-side="dark"] .hero::after { opacity: 1; }
 
         .hero::before {
             content: "";
             position: absolute;
             inset: 0;
-            z-index: -1;
+            z-index: 0;
             background:
                 linear-gradient(180deg, rgba(10, 12, 9, .25), rgba(10, 12, 9, .48) 45%, var(--bg) 100%),
                 linear-gradient(90deg, rgba(10, 12, 9, .35), transparent 50%, rgba(10, 12, 9, .35));
         }
+
+        .hero > :not(.side-switch) { position: relative; z-index: 1; }
 
         .side-switch {
             position: absolute; top: 22px; right: 24px; z-index: 3;
@@ -71,7 +85,6 @@
         .side-switch:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
         body[data-side="dark"] {
             --gold: #d98b54; --gold-light: #f0b47d; --line: rgba(217, 112, 65, .3);
-            --hero-image: url("banner-dark.png");
         }
         body[data-side="dark"] .intro { background: linear-gradient(145deg, rgba(37, 23, 21, .97), rgba(19, 15, 16, .97)); }
         body[data-side="dark"] .guide { background: linear-gradient(145deg, rgba(35, 22, 21, .97), rgba(17, 14, 15, .97)); }
