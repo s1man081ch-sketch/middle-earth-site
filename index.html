@@ -401,6 +401,60 @@
             from { opacity: .72; } to { opacity: 1; }
         }
 
+        .gollum-whisper {
+            position: fixed; right: 22px; bottom: 22px; z-index: 25;
+            display: flex; align-items: center; gap: 13px;
+            width: min(340px, calc(100vw - 32px)); padding: 13px 42px 13px 13px;
+            color: #e8dfc8; text-align: left;
+            background: linear-gradient(135deg, rgba(35, 39, 29, .97), rgba(12, 15, 12, .98));
+            border: 1px solid rgba(166, 177, 130, .5); border-radius: 13px;
+            box-shadow: 0 12px 38px rgba(0, 0, 0, .6), 0 0 22px rgba(125, 145, 91, .12);
+            opacity: 0; visibility: hidden; transform: translateY(14px);
+            transition: opacity .45s ease, transform .45s ease, visibility .45s ease;
+        }
+        .gollum-whisper.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .gollum-portrait {
+            position: relative; flex: 0 0 68px; width: 68px; height: 76px;
+            overflow: hidden; border-radius: 9px;
+            background: radial-gradient(ellipse at 50% 42%, #78816a 0 20%, #343e2d 52%, #111710 100%);
+            box-shadow: inset 0 0 16px rgba(0,0,0,.7);
+        }
+        .gollum-head {
+            position: absolute; left: 17px; top: 10px; width: 35px; height: 49px;
+            background: linear-gradient(100deg, #a2a88a, #69765b 70%, #3c4937);
+            border-radius: 48% 48% 43% 43%; transform: rotate(-5deg);
+            box-shadow: 0 2px 8px #111;
+        }
+        .gollum-head::before {
+            content: ""; position: absolute; left: 5px; top: 15px; width: 25px; height: 8px;
+            background: radial-gradient(ellipse, #e4dcae 0 20%, #b5a76c 24% 40%, #24271d 45%);
+            border-radius: 50%; box-shadow: 0 0 5px rgba(240,220,150,.35);
+        }
+        .gollum-head::after {
+            content: ""; position: absolute; left: 14px; top: 22px; width: 8px; height: 15px;
+            background: #657052; border-radius: 50%;
+            box-shadow: 2px 17px 0 -1px #d0c7a4;
+        }
+        .gollum-copy { min-width: 0; }
+        .gollum-copy strong {
+            display: block; margin-bottom: 5px; color: #c9d0a5;
+            font: 700 .72rem "Segoe UI", Arial, sans-serif; letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+        .gollum-copy span { color: #f0e6c9; font-size: 1.08rem; font-style: italic; }
+        .gollum-close {
+            position: absolute; top: 5px; right: 8px; padding: 3px 7px;
+            color: #c8c5b5; background: transparent; border: 0;
+            font-size: 1.25rem; cursor: pointer;
+        }
+        .gollum-close:focus-visible { outline: 2px solid #d8b45b; border-radius: 4px; }
+        @media (max-width: 600px) {
+            .gollum-whisper { right: 12px; bottom: 12px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .gollum-whisper { transition: none; }
+        }
+
         .footer {
             margin-top: 64px;
             padding: 24px 20px 30px;
@@ -538,6 +592,11 @@
         <div class="sauron-eye" aria-hidden="true"></div>
         <p class="sauron-caption">Око Саурона пробудилось</p>
     </div>
+    <aside class="gollum-whisper" id="gollum-whisper" aria-hidden="true" aria-live="polite">
+        <div class="gollum-portrait" aria-hidden="true"><div class="gollum-head"></div></div>
+        <div class="gollum-copy"><strong>Голлум</strong><span>«Моя прелесть…»</span></div>
+        <button class="gollum-close" id="gollum-close" type="button" aria-label="Закрыть">×</button>
+    </aside>
     <script>
         (() => {
             const logo = document.querySelector(".logo");
@@ -579,6 +638,30 @@
             document.addEventListener("keydown", event => {
                 if (event.key === "Escape") closeRing();
             });
+
+            const gollumWhisper = document.getElementById("gollum-whisper");
+            const gollumClose = document.getElementById("gollum-close");
+            let gollumShown = false;
+            let inactivityTimer;
+            function showGollum() {
+                if (gollumShown) return;
+                gollumShown = true;
+                gollumWhisper.classList.add("is-visible");
+                gollumWhisper.setAttribute("aria-hidden", "false");
+            }
+            function resetInactivityTimer() {
+                if (gollumShown) return;
+                clearTimeout(inactivityTimer);
+                inactivityTimer = setTimeout(showGollum, 60000);
+            }
+            ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
+                document.addEventListener(eventName, resetInactivityTimer, { passive: true });
+            });
+            gollumClose.addEventListener("click", () => {
+                gollumWhisper.classList.remove("is-visible");
+                gollumWhisper.setAttribute("aria-hidden", "true");
+            });
+            resetInactivityTimer();
 
             const button = document.getElementById("side-switch");
             function setSide(side) {
