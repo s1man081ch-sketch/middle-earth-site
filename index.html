@@ -891,6 +891,51 @@
                 if (event.key === "Escape") closePalantir();
             });
 
+            const treebeardEncounter = document.getElementById("treebeard-encounter");
+            const treebeardPhrase = document.getElementById("treebeard-phrase");
+            const treebeardPhrases = [
+                "«Хм-м-м… Давненько я не встречал здесь путников. Очень давненько…»",
+                "«Не стоит торопиться. Не стоит… Даже деревьям нужно время, чтобы подумать.»",
+                "«Хуорн… Хуорн… Где же вы? Лес сегодня хранит слишком много тайн.»",
+                "«Средиземье меняется, маленький друг. Но корни помнят всё.»",
+                "«Слишком много топоров звенит в этих землях… Надеюсь, ты пришёл с миром.»",
+                "«Хм! Я не спешу. Спешка редко приводит к хорошим историям.»"
+            ];
+            let treebeardIdleTimer;
+            let treebeardHideTimer;
+            let treebeardTypingTimer;
+            let treebeardPhraseIndex = -1;
+            function hideTreebeard() {
+                clearTimeout(treebeardHideTimer);
+                clearInterval(treebeardTypingTimer);
+                treebeardEncounter.classList.remove("is-visible");
+                treebeardEncounter.setAttribute("aria-hidden", "true");
+            }
+            function awakenTreebeard() {
+                let next = Math.floor(Math.random() * treebeardPhrases.length);
+                if (treebeardPhrases.length > 1 && next === treebeardPhraseIndex) next = (next + 1) % treebeardPhrases.length;
+                treebeardPhraseIndex = next;
+                const phrase = treebeardPhrases[next];
+                treebeardPhrase.textContent = "";
+                treebeardEncounter.classList.add("is-visible");
+                treebeardEncounter.setAttribute("aria-hidden", "false");
+                let position = 0;
+                treebeardTypingTimer = setInterval(() => {
+                    treebeardPhrase.textContent = phrase.slice(0, ++position);
+                    if (position >= phrase.length) clearInterval(treebeardTypingTimer);
+                }, 72);
+                treebeardHideTimer = setTimeout(hideTreebeard, 12500);
+            }
+            function resetTreebeardIdleTimer() {
+                clearTimeout(treebeardIdleTimer);
+                if (treebeardEncounter.classList.contains("is-visible")) hideTreebeard();
+                treebeardIdleTimer = setTimeout(awakenTreebeard, 10000);
+            }
+            ["pointermove", "pointerdown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
+                document.addEventListener(eventName, resetTreebeardIdleTimer, { passive: true });
+            });
+            resetTreebeardIdleTimer();
+
             const logo = document.querySelector(".logo");
             const ringOverlay = document.getElementById("ring-easter-egg");
             const ringClose = document.getElementById("ring-close");
