@@ -453,7 +453,7 @@
             background: #9b684b; border-radius: 50%;
             box-shadow: 0 15px 0 3px #344b31;
         }
-        .gollum-copy { min-width: 0; opacity: 1; transition: opacity .25s ease; }
+        .gollum-copy { min-width: 0; opacity: 1; transform: translateY(0) scale(1); filter: blur(0); transition: opacity .35s ease, transform .35s ease, filter .35s ease; }
         .gollum-copy strong {
             display: block; margin-bottom: 5px; color: #c9d0a5;
             font: 700 .72rem "Segoe UI", Arial, sans-serif; letter-spacing: .16em;
@@ -470,7 +470,7 @@
             .gollum-whisper { right: 12px; bottom: 12px; }
         }
         @media (prefers-reduced-motion: reduce) {
-            .gollum-whisper { transition: none; }
+            .gollum-whisper, .gollum-copy { transition: none; }
         }
 
         .palantir-overlay {
@@ -886,15 +886,23 @@
                 gollumWhisper.setAttribute("aria-hidden", "true");
             }
             function displayDialogueMessage(speaker, phrase, isBilbo) {
-                gollumCopy.style.opacity = "0";
                 clearTimeout(messageSwapTimer);
+                gollumCopy.style.opacity = "0";
+                gollumCopy.style.transform = "translateY(10px) scale(.98)";
+                gollumCopy.style.filter = "blur(3px)";
                 messageSwapTimer = setTimeout(() => {
                     if (!gollumVisible) return;
                     gollumSpeaker.textContent = speaker;
                     gollumPhrase.textContent = phrase;
                     gollumPortrait.classList.toggle("bilbo-portrait", isBilbo);
-                    gollumCopy.style.opacity = "1";
-                }, 250);
+                    gollumCopy.style.transform = "translateY(-8px) scale(.98)";
+                    requestAnimationFrame(() => {
+                        if (!gollumVisible) return;
+                        gollumCopy.style.opacity = "1";
+                        gollumCopy.style.transform = "translateY(0) scale(1)";
+                        gollumCopy.style.filter = "blur(0)";
+                    });
+                }, 350);
             }
             function showGollum() {
                 let nextDialogue = Math.floor(Math.random() * gollumDialogues.length);
