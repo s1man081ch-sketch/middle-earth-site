@@ -873,11 +873,13 @@
             ];
             let inactivityTimer;
             let gollumMessageTimer;
+            let gollumHideTimer;
             let lastGollumPhrase = -1;
             let gollumVisible = false;
 
             function hideGollum() {
                 clearTimeout(gollumMessageTimer);
+                clearTimeout(gollumHideTimer);
                 gollumVisible = false;
                 gollumWhisper.classList.remove("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "true");
@@ -900,12 +902,15 @@
                     gollumWhisper.classList.add("is-visible");
                     gollumWhisper.setAttribute("aria-hidden", "false");
                 }
+                clearTimeout(gollumHideTimer);
+                gollumHideTimer = setTimeout(hideGollum, 3000);
                 gollumMessageTimer = setTimeout(showGollum, 10000);
             }
 
             function resetInactivityTimer() {
                 clearTimeout(inactivityTimer);
                 clearTimeout(gollumMessageTimer);
+                clearTimeout(gollumHideTimer);
                 if (gollumVisible) hideGollum();
                 inactivityTimer = setTimeout(showGollum, 10000);
             }
