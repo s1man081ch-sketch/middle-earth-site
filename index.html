@@ -1040,7 +1040,7 @@
                 }
                 clearTimeout(gollumHideTimer);
                 gollumHideTimer = setTimeout(hideGollum, 4000);
-                gollumMessageTimer = setTimeout(showGollum, 5000);
+                gollumMessageTimer = setTimeout(showGollum, 13000);
             }
 
             function resetInactivityTimer() {
@@ -1048,7 +1048,7 @@
                 clearTimeout(gollumMessageTimer);
                 clearTimeout(gollumHideTimer);
                 if (gollumVisible) hideGollum();
-                inactivityTimer = setTimeout(showGollum, 5000);
+                inactivityTimer = setTimeout(showGollum, 13000);
             }
 
             ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
