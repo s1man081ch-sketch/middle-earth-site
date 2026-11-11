@@ -360,6 +360,47 @@
             .ring-easter-egg, .ring-dialog { transition: none; }
         }
 
+        .sauron-flash {
+            position: fixed; inset: 0; z-index: 30; display: grid; place-content: center;
+            gap: 22px; padding: 24px; overflow: hidden; pointer-events: none;
+            background: radial-gradient(ellipse at center, rgba(105, 12, 5, .48), rgba(8, 3, 3, .88) 68%);
+            opacity: 0; visibility: hidden;
+        }
+        .sauron-flash.is-visible { visibility: visible; animation: sauron-reveal 3.8s ease both; }
+        .sauron-eye {
+            position: relative; width: min(66vw, 520px); height: min(28vw, 210px);
+            min-width: 260px; min-height: 105px; margin: auto;
+            overflow: hidden; clip-path: polygon(0 50%, 13% 22%, 35% 5%, 50% 0, 65% 5%, 87% 22%, 100% 50%, 87% 78%, 65% 95%, 50% 100%, 35% 95%, 13% 78%);
+            background: radial-gradient(ellipse at center, #ffe6a0 0%, #ff9d26 20%, #c52b0d 48%, #3b0805 76%, transparent 78%);
+            filter: drop-shadow(0 0 18px #ff3b0b) drop-shadow(0 0 48px rgba(255, 45, 0, .85));
+            animation: eye-pulse 1.25s ease-in-out infinite alternate;
+        }
+        .sauron-eye::before {
+            content: ""; position: absolute; left: 46%; top: 7%; width: 8%; height: 86%;
+            border-radius: 50%; background: #170402;
+            box-shadow: 0 0 13px 5px #ffdf91, 0 0 34px 12px #ff5a13, 0 0 75px 24px rgba(255, 49, 0, .9);
+        }
+        .sauron-eye::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent 42%, rgba(255,244,194,.75) 50%, transparent 58%);
+            opacity: .35; mix-blend-mode: screen;
+        }
+        .sauron-caption {
+            margin: 0; color: #ffd18a; font: 700 clamp(.9rem, 2.5vw, 1.25rem) "Segoe UI", Arial, sans-serif;
+            letter-spacing: .28em; text-transform: uppercase; text-shadow: 0 0 18px #ff2600;
+            animation: caption-flicker 1.8s ease-in-out infinite alternate;
+        }
+        @keyframes sauron-reveal {
+            0% { opacity: 0; } 12%, 78% { opacity: 1; } 100% { opacity: 0; }
+        }
+        @keyframes eye-pulse {
+            from { transform: scale(.96); filter: drop-shadow(0 0 12px #ff3b0b); }
+            to { transform: scale(1.04); filter: drop-shadow(0 0 28px #ff3b0b) drop-shadow(0 0 60px rgba(255,45,0,.9)); }
+        }
+        @keyframes caption-flicker {
+            from { opacity: .72; } to { opacity: 1; }
+        }
+
         .footer {
             margin-top: 64px;
             padding: 24px 20px 30px;
@@ -493,6 +534,10 @@
             <p>Одно Кольцо, чтоб править всеми.<br>Одно Кольцо, чтоб найти их,<br>Одно Кольцо, чтоб собрать их всех<br>И в чёрной воле соединить.</p>
         </div>
     </div>
+    <div class="sauron-flash" id="sauron-flash" aria-hidden="true">
+        <div class="sauron-eye" aria-hidden="true"></div>
+        <p class="sauron-caption">Око Саурона пробудилось</p>
+    </div>
     <script>
         (() => {
             const logo = document.querySelector(".logo");
@@ -545,6 +590,35 @@
             }
             setSide(localStorage.getItem("middle-earth-side") === "dark" ? "dark" : "light");
             button.addEventListener("click", () => setSide(document.body.dataset.side === "dark" ? "light" : "dark"));
+            const sauronFlash = document.getElementById("sauron-flash");
+            let sideSwitches = 0;
+            let switchWindowTimer;
+            let sauronCooldown = false;
+            let sauronHideTimer;
+            function revealSauronEye() {
+                if (sauronCooldown) return;
+                sauronCooldown = true;
+                sauronFlash.classList.remove("is-visible");
+                void sauronFlash.offsetWidth;
+                sauronFlash.classList.add("is-visible");
+                sauronFlash.setAttribute("aria-hidden", "false");
+                clearTimeout(sauronHideTimer);
+                sauronHideTimer = setTimeout(() => {
+                    sauronFlash.classList.remove("is-visible");
+                    sauronFlash.setAttribute("aria-hidden", "true");
+                }, 3900);
+                setTimeout(() => { sauronCooldown = false; }, 12000);
+            }
+            button.addEventListener("click", () => {
+                sideSwitches += 1;
+                clearTimeout(switchWindowTimer);
+                if (sideSwitches >= 5) {
+                    sideSwitches = 0;
+                    revealSauronEye();
+                } else {
+                    switchWindowTimer = setTimeout(() => { sideSwitches = 0; }, 7000);
+                }
+            });
         })();
     </script>
 </body>
