@@ -435,6 +435,24 @@
             background: #657052; border-radius: 50%;
             box-shadow: 2px 17px 0 -1px #d0c7a4;
         }
+        .gollum-portrait.bilbo-portrait {
+            background: radial-gradient(ellipse at 50% 38%, #d9b98c 0 25%, #4a6840 58%, #18251b 100%);
+        }
+        .bilbo-portrait .gollum-head {
+            left: 16px; top: 13px; width: 37px; height: 42px;
+            background: linear-gradient(100deg, #f0c99c, #d6a878 75%, #986c4e);
+            border-radius: 48% 48% 44% 44%;
+        }
+        .bilbo-portrait .gollum-head::before {
+            left: 5px; top: 15px; width: 27px; height: 6px;
+            background: radial-gradient(ellipse, #4d6840 0 22%, #273d27 28% 48%, transparent 54%);
+            box-shadow: none;
+        }
+        .bilbo-portrait .gollum-head::after {
+            left: 14px; top: 25px; width: 9px; height: 9px;
+            background: #9b684b; border-radius: 50%;
+            box-shadow: 0 15px 0 3px #344b31;
+        }
         .gollum-copy { min-width: 0; }
         .gollum-copy strong {
             display: block; margin-bottom: 5px; color: #c9d0a5;
@@ -690,8 +708,8 @@
         <p class="sauron-caption">Око Саурона пробудилось</p>
     </div>
     <aside class="gollum-whisper" id="gollum-whisper" aria-hidden="true" aria-live="polite">
-        <div class="gollum-portrait" aria-hidden="true"><div class="gollum-head"></div></div>
-        <div class="gollum-copy"><strong>Голлум</strong><span id="gollum-phrase">«Моя прелесть…»</span></div>
+        <div class="gollum-portrait" id="gollum-portrait" aria-hidden="true"><div class="gollum-head"></div></div>
+        <div class="gollum-copy"><strong id="gollum-speaker">Голлум</strong><span id="gollum-phrase">«Моя прелесть…»</span></div>
         <button class="gollum-close" id="gollum-close" type="button" aria-label="Закрыть">×</button>
     </aside>
     <div class="palantir-overlay" id="palantir-overlay" aria-hidden="true">
@@ -841,44 +859,58 @@
             const gollumWhisper = document.getElementById("gollum-whisper");
             const gollumClose = document.getElementById("gollum-close");
             const gollumPhrase = document.getElementById("gollum-phrase");
-            const gollumPhrases = [
-                "«Моя прелесть…»",
-                "«Голлум, Голлум…»",
-                "«Они украли её у нас!»",
-                "«Нельзя доверять этим хоббитам…»",
-                "«Тихо-тихо… мы наблюдаем»",
-                "«Прелесть зовёт нас…»",
-                "«Хозяин должен быть осторожен»",
-                "«Мы знаем короткий путь…»"
+            const gollumSpeaker = document.getElementById("gollum-speaker");
+            const gollumPortrait = document.getElementById("gollum-portrait");
+            const gollumDialogues = [
+                ["«Отдай нам нашу прелесть, Бэггинс!»", "«Кольцо? Оно у меня не с собой. И вообще, не называй меня Бэггинсом таким тоном.»"],
+                ["«Мы помним тебя, хоббит! Ты обманул нас!»", "«Я просто выиграл загадки, Голлум. Это называется смекалка.»"],
+                ["«Что у тебя в карманах, воришка?»", "«Платок, трубка и несколько крошек. Ничего интересного!»"],
+                ["«Мы хотим рыбку… и нашу прелесть!»", "«Рыба тебе не повредит. А вот с Кольцом лучше завязать.»"],
+                ["«Мастер Бэггинс, куда ты спрятал сокровище?»", "«В надёжном месте. И не собираюсь тебе его показывать!»"],
+                ["«Тысячи лет мы ждали… Голлум не забыл!»", "«А я надеялся, что ты уже нашёл себе новое хобби.»"],
+                ["«Тихо, тихо… мы можем договориться, хоббит.»", "«С тобой? В прошлый раз это закончилось очень странно.»"],
+                ["«Прелесть шепчет нам о тебе, Бэггинс…»", "«Тогда скажи ей, чтобы говорила потише. Я пытаюсь отдохнуть.»"]
             ];
             let inactivityTimer;
             let gollumHideTimer;
-            let lastGollumPhrase = -1;
+            let bilboReplyTimer;
+            let lastGollumDialogue = -1;
             let gollumVisible = false;
             function hideGollum() {
                 clearTimeout(gollumHideTimer);
+                clearTimeout(bilboReplyTimer);
                 gollumVisible = false;
                 gollumWhisper.classList.remove("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "true");
             }
             function showGollum() {
-                let nextPhrase = Math.floor(Math.random() * gollumPhrases.length);
-                if (gollumPhrases.length > 1 && nextPhrase === lastGollumPhrase) {
-                    nextPhrase = (nextPhrase + 1 + Math.floor(Math.random() * (gollumPhrases.length - 1))) % gollumPhrases.length;
+                let nextDialogue = Math.floor(Math.random() * gollumDialogues.length);
+                if (gollumDialogues.length > 1 && nextDialogue === lastGollumDialogue) {
+                    nextDialogue = (nextDialogue + 1 + Math.floor(Math.random() * (gollumDialogues.length - 1))) % gollumDialogues.length;
                 }
-                lastGollumPhrase = nextPhrase;
-                gollumPhrase.textContent = gollumPhrases[nextPhrase];
+                lastGollumDialogue = nextDialogue;
+                const dialogue = gollumDialogues[nextDialogue];
+                gollumSpeaker.textContent = "Голлум";
+                gollumPortrait.classList.remove("bilbo-portrait");
+                gollumPhrase.textContent = dialogue[0];
                 gollumVisible = true;
                 gollumWhisper.classList.add("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "false");
+                bilboReplyTimer = setTimeout(() => {
+                    if (!gollumVisible) return;
+                    gollumSpeaker.textContent = "Бильбо Бэггинс";
+                    gollumPortrait.classList.add("bilbo-portrait");
+                    gollumPhrase.textContent = dialogue[1];
+                }, 2200);
                 gollumHideTimer = setTimeout(() => {
                     hideGollum();
                     resetInactivityTimer();
-                }, 4500);
+                }, 5200);
             }
             function resetInactivityTimer() {
                 clearTimeout(inactivityTimer);
                 clearTimeout(gollumHideTimer);
+                clearTimeout(bilboReplyTimer);
                 if (gollumVisible) hideGollum();
                 inactivityTimer = setTimeout(showGollum, 10000);
             }
