@@ -691,7 +691,7 @@
     </div>
     <aside class="gollum-whisper" id="gollum-whisper" aria-hidden="true" aria-live="polite">
         <div class="gollum-portrait" aria-hidden="true"><div class="gollum-head"></div></div>
-        <div class="gollum-copy"><strong>Голлум</strong><span>«Моя прелесть…»</span></div>
+        <div class="gollum-copy"><strong>Голлум</strong><span id="gollum-phrase">«Моя прелесть…»</span></div>
         <button class="gollum-close" id="gollum-close" type="button" aria-label="Закрыть">×</button>
     </aside>
     <div class="palantir-overlay" id="palantir-overlay" aria-hidden="true">
@@ -840,25 +840,54 @@
 
             const gollumWhisper = document.getElementById("gollum-whisper");
             const gollumClose = document.getElementById("gollum-close");
-            let gollumShown = false;
+            const gollumPhrase = document.getElementById("gollum-phrase");
+            const gollumPhrases = [
+                "«Моя прелесть…»",
+                "«Голлум, Голлум…»",
+                "«Они украли её у нас!»",
+                "«Нельзя доверять этим хоббитам…»",
+                "«Тихо-тихо… мы наблюдаем»",
+                "«Прелесть зовёт нас…»",
+                "«Хозяин должен быть осторожен»",
+                "«Мы знаем короткий путь…»"
+            ];
             let inactivityTimer;
+            let gollumHideTimer;
+            let lastGollumPhrase = -1;
+            let gollumVisible = false;
+            function hideGollum() {
+                clearTimeout(gollumHideTimer);
+                gollumVisible = false;
+                gollumWhisper.classList.remove("is-visible");
+                gollumWhisper.setAttribute("aria-hidden", "true");
+            }
             function showGollum() {
-                if (gollumShown) return;
-                gollumShown = true;
+                let nextPhrase = Math.floor(Math.random() * gollumPhrases.length);
+                if (gollumPhrases.length > 1 && nextPhrase === lastGollumPhrase) {
+                    nextPhrase = (nextPhrase + 1 + Math.floor(Math.random() * (gollumPhrases.length - 1))) % gollumPhrases.length;
+                }
+                lastGollumPhrase = nextPhrase;
+                gollumPhrase.textContent = gollumPhrases[nextPhrase];
+                gollumVisible = true;
                 gollumWhisper.classList.add("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "false");
+                gollumHideTimer = setTimeout(() => {
+                    hideGollum();
+                    resetInactivityTimer();
+                }, 4500);
             }
             function resetInactivityTimer() {
-                if (gollumShown) return;
                 clearTimeout(inactivityTimer);
-                inactivityTimer = setTimeout(showGollum, 60000);
+                clearTimeout(gollumHideTimer);
+                if (gollumVisible) hideGollum();
+                inactivityTimer = setTimeout(showGollum, 10000);
             }
             ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
                 document.addEventListener(eventName, resetInactivityTimer, { passive: true });
             });
             gollumClose.addEventListener("click", () => {
-                gollumWhisper.classList.remove("is-visible");
-                gollumWhisper.setAttribute("aria-hidden", "true");
+                hideGollum();
+                resetInactivityTimer();
             });
             resetInactivityTimer();
 
