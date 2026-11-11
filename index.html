@@ -479,6 +479,24 @@
             background: radial-gradient(ellipse at 50% 42%, #78816a 0 20%, #343e2d 52%, #111710 100%);
             box-shadow: inset 0 0 16px rgba(0,0,0,.7);
         }
+        .gollum-portrait.bilbo-portrait {
+            background: radial-gradient(ellipse at 50% 42%, #d8bd8c 0 20%, #746044 52%, #211b14 100%);
+        }
+        .gollum-portrait.bilbo-portrait .gollum-head {
+            left: 18px; top: 13px; width: 33px; height: 43px;
+            background: linear-gradient(100deg, #e8c99a, #b8895c 75%, #79543b);
+            border-radius: 46% 46% 40% 40%; transform: rotate(2deg);
+        }
+        .gollum-portrait.bilbo-portrait .gollum-head::before {
+            left: 4px; top: 15px; width: 25px; height: 7px;
+            background: radial-gradient(ellipse, #e8d4a9 0 24%, #6b4b32 30% 48%, #26301e 52%);
+            box-shadow: 0 0 0 2px #79543b;
+        }
+        .gollum-portrait.bilbo-portrait .gollum-head::after {
+            left: 12px; top: 23px; width: 9px; height: 13px;
+            background: #c18d61; border-radius: 45%;
+            box-shadow: 0 15px 0 -2px #4c3526;
+        }
         .gollum-head {
             position: absolute; left: 17px; top: 10px; width: 35px; height: 49px;
             background: linear-gradient(100deg, #a2a88a, #69765b 70%, #3c4937);
@@ -996,11 +1014,13 @@
             let inactivityTimer;
             let gollumMessageTimer;
             let gollumHideTimer;
+            let bilboReplyTimer;
             let lastGollumPhrase = -1;
             let gollumVisible = false;
 
             function hideGollum() {
                 clearTimeout(gollumHideTimer);
+                clearTimeout(bilboReplyTimer);
                 gollumVisible = false;
                 gollumWhisper.classList.remove("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "true");
@@ -1018,13 +1038,30 @@
                 gollumPhrase.textContent = gollumPhrases[nextPhrase];
                 void gollumPhrase.offsetWidth;
                 gollumPhrase.classList.add("phrase-enter");
+                clearTimeout(bilboReplyTimer);
+                const bilboReplies = [
+                    "«Я вообще-то просто хотел спокойно пройти. И, пожалуйста, не называй меня вором!»",
+                    "«Голлум, мы же договорились: никаких разговоров о рыбке при каждом встречном!»",
+                    "«Не смотри на меня так. Я не собираюсь отдавать тебе своё кольцо!»",
+                    "«Может, ты просто оставишь посетителя в покое? Хотя бы на минуту.»",
+                    "«Опять ты за своё… Пойдём отсюда, пока нас никто не заметил.»"
+                ];
+                bilboReplyTimer = setTimeout(() => {
+                    if (!gollumVisible) return;
+                    gollumSpeaker.textContent = "Бильбо";
+                    gollumPortrait.classList.add("bilbo-portrait");
+                    gollumPhrase.classList.remove("phrase-enter");
+                    gollumPhrase.textContent = bilboReplies[nextPhrase % bilboReplies.length];
+                    void gollumPhrase.offsetWidth;
+                    gollumPhrase.classList.add("phrase-enter");
+                }, 2100);
                 if (!gollumVisible) {
                     gollumVisible = true;
                     gollumWhisper.classList.add("is-visible");
                     gollumWhisper.setAttribute("aria-hidden", "false");
                 }
                 clearTimeout(gollumHideTimer);
-                gollumHideTimer = setTimeout(hideGollum, 4000);
+                gollumHideTimer = setTimeout(hideGollum, 6200);
                 gollumMessageTimer = setTimeout(showGollum, 13000);
             }
 
@@ -1032,6 +1069,7 @@
                 clearTimeout(inactivityTimer);
                 clearTimeout(gollumMessageTimer);
                 clearTimeout(gollumHideTimer);
+                clearTimeout(bilboReplyTimer);
                 if (gollumVisible) hideGollum();
                 inactivityTimer = setTimeout(showGollum, 13000);
             }
