@@ -322,6 +322,44 @@
         .status-count{color:var(--gold-light);font-size:1.55rem;font-weight:700}
         .status-footnote{margin:16px 0 0;color:#918d80;font-size:.85rem;line-height:1.6;text-align:center}
 
+        .logo { cursor: pointer; }
+        .logo:focus-visible { outline: 3px solid var(--gold-light); outline-offset: 6px; }
+
+        .ring-easter-egg {
+            position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+            padding: 20px; background: rgba(0, 0, 0, .82); backdrop-filter: blur(7px);
+            opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
+        }
+        .ring-easter-egg.is-visible { opacity: 1; visibility: visible; }
+        .ring-dialog {
+            position: relative; width: min(100%, 460px); padding: 42px 28px 34px;
+            color: #f4e8c6; text-align: center; background: linear-gradient(145deg, #211b12, #100e0b);
+            border: 1px solid rgba(216, 180, 91, .65); border-radius: 18px;
+            box-shadow: 0 0 55px rgba(216, 153, 45, .2), 0 24px 80px rgba(0,0,0,.65);
+            transform: translateY(14px) scale(.97); transition: transform .35s ease;
+        }
+        .ring-easter-egg.is-visible .ring-dialog { transform: translateY(0) scale(1); }
+        .ring-close {
+            position: absolute; top: 12px; right: 15px; padding: 5px 10px;
+            color: #d9cba9; background: transparent; border: 0; font-size: 1.5rem; cursor: pointer;
+        }
+        .one-ring {
+            width: 112px; height: 112px; margin: 0 auto 26px; position: relative;
+            border: 12px solid #d9ad43; border-radius: 50%;
+            box-shadow: inset 0 0 12px rgba(255,235,155,.8), 0 0 18px rgba(230,171,53,.65), 0 0 38px rgba(230,171,53,.25);
+            transform: rotate(-18deg);
+        }
+        .one-ring::after {
+            content: "ᚠ ᚱ ᛟ ᛞ ᛖ ᚾ ᛟ ᚱ"; position: absolute; inset: -8px;
+            display: grid; place-items: center; color: #5c3510; font: 700 9px Georgia, serif;
+            letter-spacing: 2px; text-shadow: 0 1px 1px rgba(255,240,170,.7);
+        }
+        .ring-dialog h2 { margin: 0 0 14px; color: #f0d995; font-size: 1.7rem; font-weight: 500; }
+        .ring-dialog p { margin: 0; color: #d6c9a9; line-height: 1.75; }
+        @media (prefers-reduced-motion: reduce) {
+            .ring-easter-egg, .ring-dialog { transition: none; }
+        }
+
         .footer {
             margin-top: 64px;
             padding: 24px 20px 30px;
@@ -447,8 +485,56 @@
         © 2026 <span>Средиземье</span> · Minecraft Roleplay Server
         <p>Исполняйте желания ваших жен</p>
     </footer>
+    <div class="ring-easter-egg" id="ring-easter-egg" aria-hidden="true">
+        <div class="ring-dialog" role="dialog" aria-modal="true" aria-labelledby="ring-title">
+            <button class="ring-close" id="ring-close" type="button" aria-label="Закрыть">×</button>
+            <div class="one-ring" aria-hidden="true"></div>
+            <h2 id="ring-title">Единое Кольцо</h2>
+            <p>Одно Кольцо, чтоб править всеми.<br>Одно Кольцо, чтоб найти их,<br>Одно Кольцо, чтоб собрать их всех<br>И в чёрной воле соединить.</p>
+        </div>
+    </div>
     <script>
         (() => {
+            const logo = document.querySelector(".logo");
+            const ringOverlay = document.getElementById("ring-easter-egg");
+            const ringClose = document.getElementById("ring-close");
+            let logoClicks = 0;
+            let logoClickTimer;
+            function openRing() {
+                ringOverlay.classList.add("is-visible");
+                ringOverlay.setAttribute("aria-hidden", "false");
+            }
+            function closeRing() {
+                ringOverlay.classList.remove("is-visible");
+                ringOverlay.setAttribute("aria-hidden", "true");
+            }
+            logo.addEventListener("click", () => {
+                logoClicks += 1;
+                clearTimeout(logoClickTimer);
+                if (logoClicks >= 7) {
+                    logoClicks = 0;
+                    openRing();
+                } else {
+                    logoClickTimer = setTimeout(() => { logoClicks = 0; }, 1800);
+                }
+            });
+            logo.addEventListener("keydown", event => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    logo.click();
+                }
+            });
+            logo.tabIndex = 0;
+            logo.setAttribute("role", "button");
+            logo.setAttribute("aria-label", "Секретная эмблема. Нажми семь раз");
+            ringClose.addEventListener("click", closeRing);
+            ringOverlay.addEventListener("click", event => {
+                if (event.target === ringOverlay) closeRing();
+            });
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape") closeRing();
+            });
+
             const button = document.getElementById("side-switch");
             function setSide(side) {
                 const dark = side === "dark";
