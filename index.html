@@ -409,10 +409,24 @@
             background: linear-gradient(135deg, rgba(35, 39, 29, .97), rgba(12, 15, 12, .98));
             border: 1px solid rgba(166, 177, 130, .5); border-radius: 13px;
             box-shadow: 0 12px 38px rgba(0, 0, 0, .6), 0 0 22px rgba(125, 145, 91, .12);
-            opacity: 0; visibility: hidden; transform: translateY(14px);
-            transition: opacity .45s ease, transform .45s ease, visibility .45s ease;
+            opacity: 0; visibility: hidden; transform: translateY(22px) scale(.97);
+            filter: blur(3px);
+            transition: opacity .75s cubic-bezier(.22, 1, .36, 1),
+                        transform .75s cubic-bezier(.22, 1, .36, 1),
+                        filter .75s ease, visibility .75s ease;
+            will-change: opacity, transform, filter;
         }
-        .gollum-whisper.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .gollum-whisper.is-visible {
+            opacity: 1; visibility: visible; transform: translateY(0) scale(1); filter: blur(0);
+        }
+        .gollum-copy span { display: inline-block; }
+        .gollum-copy span.phrase-enter {
+            animation: gollum-phrase-in .85s cubic-bezier(.22, 1, .36, 1) both;
+        }
+        @keyframes gollum-phrase-in {
+            from { opacity: 0; transform: translateY(9px); filter: blur(4px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
         .gollum-portrait {
             position: relative; flex: 0 0 68px; width: 68px; height: 76px;
             overflow: hidden; border-radius: 9px;
@@ -454,6 +468,7 @@
         }
         @media (prefers-reduced-motion: reduce) {
             .gollum-whisper, .gollum-copy { transition: none; }
+            .gollum-copy span.phrase-enter { animation: none; }
         }
 
         .palantir-overlay {
@@ -876,7 +891,10 @@
                 lastGollumPhrase = nextPhrase;
                 gollumSpeaker.textContent = "Голлум";
                 gollumPortrait.classList.remove("bilbo-portrait");
+                gollumPhrase.classList.remove("phrase-enter");
                 gollumPhrase.textContent = gollumPhrases[nextPhrase];
+                void gollumPhrase.offsetWidth;
+                gollumPhrase.classList.add("phrase-enter");
                 if (!gollumVisible) {
                     gollumVisible = true;
                     gollumWhisper.classList.add("is-visible");
