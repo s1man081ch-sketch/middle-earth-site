@@ -76,7 +76,7 @@
 
         /* Treebeard easter egg */
         .treebeard-encounter {
-            position: absolute !important; inset: auto 0 0; z-index: 8;
+            position: absolute !important; top: -210px; left: 0; right: 0; z-index: 8;
             min-height: 210px; display: flex; align-items: flex-end; justify-content: center;
             gap: clamp(10px, 3vw, 34px); padding: 0 24px 12px;
             pointer-events: none; opacity: 0; visibility: hidden;
@@ -110,7 +110,7 @@
             100% { opacity:1; transform:translateY(0) scale(1); }
         }
         @media (max-width: 560px) {
-            .treebeard-encounter { min-height:190px; gap:8px; padding:0 10px 10px; }
+            .treebeard-encounter { top:-190px; min-height:190px; gap:8px; padding:0 10px 10px; }
             .treebeard-figure { width:95px; height:140px; }
             .treebeard-copy { width:calc(100% - 105px); padding:12px; margin-bottom:10px; }
             .treebeard-copy p { font-size:.9rem; }
@@ -665,6 +665,9 @@
         <h1>Средиземье</h1>
         <div class="ornament" aria-hidden="true"></div>
         <p class="hero-subtitle">Мир легенд, древних королевств и великих приключений ждёт тебя.</p>
+    </header>
+
+    <main class="main">
         <div class="treebeard-encounter" id="treebeard-encounter" aria-hidden="true">
             <div class="treebeard-figure" aria-hidden="true">
                 <svg viewBox="0 0 180 230" xmlns="http://www.w3.org/2000/svg">
@@ -696,9 +699,6 @@
                 <p id="treebeard-phrase" aria-live="polite"></p>
             </div>
         </div>
-    </header>
-
-    <main class="main">
         <section class="intro" aria-labelledby="welcome-title">
             <img src="logo.png" alt="Эмблема сервера Средиземье" class="logo">
             <p class="section-label">Minecraft Roleplay</p>
