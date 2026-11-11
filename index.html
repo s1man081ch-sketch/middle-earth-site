@@ -1054,15 +1054,15 @@
                     gollumPhrase.textContent = bilboReplies[nextPhrase % bilboReplies.length];
                     void gollumPhrase.offsetWidth;
                     gollumPhrase.classList.add("phrase-enter");
-                }, 2100);
+                }, 4800);
                 if (!gollumVisible) {
                     gollumVisible = true;
                     gollumWhisper.classList.add("is-visible");
                     gollumWhisper.setAttribute("aria-hidden", "false");
                 }
                 clearTimeout(gollumHideTimer);
-                gollumHideTimer = setTimeout(hideGollum, 6200);
-                gollumMessageTimer = setTimeout(showGollum, 13000);
+                gollumHideTimer = setTimeout(hideGollum, 10500);
+                gollumMessageTimer = setTimeout(showGollum, 26000);
             }
 
             function resetInactivityTimer() {
@@ -1071,7 +1071,7 @@
                 clearTimeout(gollumHideTimer);
                 clearTimeout(bilboReplyTimer);
                 if (gollumVisible) hideGollum();
-                inactivityTimer = setTimeout(showGollum, 13000);
+                inactivityTimer = setTimeout(showGollum, 15000);
             }
 
             ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
