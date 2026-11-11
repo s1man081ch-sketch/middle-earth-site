@@ -74,97 +74,6 @@
 
         .hero > :not(.side-switch) { position: relative; z-index: 1; }
 
-        .gandalf-cart[hidden] { display: none; }
-        .gandalf-cart {
-            position: absolute !important; z-index: 6 !important; bottom: 5px; left: -190px;
-            display: block; width: 150px; height: 105px; padding: 0; overflow: visible;
-            border: 0; background: transparent; cursor: crosshair;
-            animation: gandalf-ride 11s linear forwards;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,.65));
-        }
-        .gandalf-wizard {
-            position: absolute; left: 27px; bottom: 29px; z-index: 2;
-            display: block; font-size: 51px; line-height: 1;
-            transform-origin: 50% 100%; animation: gandalf-bounce .55s ease-in-out infinite alternate;
-        }
-        .gandalf-cart-body {
-            position: absolute; left: 67px; bottom: 21px; width: 76px; height: 31px;
-            border: 4px solid #684321; border-top: 5px solid #b58a4c;
-            border-radius: 4px 5px 12px 8px;
-            background: linear-gradient(145deg, #a9793f, #54351f);
-            box-shadow: inset 0 4px 5px rgba(255,220,150,.3), 0 2px 0 #2b1c12;
-            transform: skewX(-7deg);
-        }
-        .cart-load {
-            position: absolute; top: -22px; left: 19px; color: #f5d88c;
-            font-size: 22px; text-shadow: 0 0 10px #ffca55;
-        }
-        .gandalf-wheel {
-            position: absolute; bottom: 4px; width: 25px; height: 25px;
-            border: 5px solid #34251a; border-radius: 50%;
-            background: radial-gradient(circle, #d6b16c 0 18%, #76502d 22% 55%, #211811 60%);
-            animation: gandalf-wheel-spin .55s linear infinite;
-        }
-        .gandalf-wheel-left { left: 78px; }
-        .gandalf-wheel-right { left: 126px; }
-        @keyframes gandalf-ride {
-            from { left: -190px; }
-            to { left: calc(100% + 190px); }
-        }
-        @keyframes gandalf-bounce {
-            from { transform: translateY(1px) rotate(-2deg); }
-            to { transform: translateY(-4px) rotate(2deg); }
-        }
-        @keyframes gandalf-wheel-spin { to { transform: rotate(360deg); } }
-
-        .gandalf-fireworks {
-            position: absolute !important; inset: 0; z-index: 5; overflow: hidden;
-            display: grid; place-items: center; align-content: center; gap: 12px;
-            opacity: 0; visibility: hidden; pointer-events: none;
-            background: radial-gradient(ellipse at 50% 80%, rgba(255,173,57,.24), transparent 58%);
-        }
-        .gandalf-fireworks.is-visible {
-            visibility: visible; animation: gandalf-firework-show 3.8s ease both;
-        }
-        .gandalf-fireworks p {
-            margin: 0; color: #ffe7a6; font: 900 clamp(1.35rem, 4vw, 2.8rem) "Segoe UI", Arial, sans-serif;
-            letter-spacing: .1em; text-transform: uppercase; text-shadow: 0 0 10px #ffb52e, 0 0 32px #ff5b18;
-            animation: gandalf-caption-pop .7s cubic-bezier(.2,1.5,.4,1) both;
-        }
-        .firework-dragon {
-            position: relative; z-index: 2; font-size: clamp(4rem, 10vw, 7rem);
-            filter: drop-shadow(0 0 16px #ffb52e) drop-shadow(0 0 35px #ff4b1b);
-            animation: dragon-flight 2.8s ease-in-out both;
-        }
-        .firework-burst {
-            position: absolute; width: 12px; height: 12px; border-radius: 50%;
-            background: #fff3b0;
-            box-shadow: 0 0 0 7px rgba(255,190,70,.2), 0 0 24px 12px #ff9c2e, 0 0 55px 22px rgba(255,68,25,.5);
-            animation: firework-bloom 1.25s ease-out infinite;
-        }
-        .burst-one { left: 22%; top: 25%; }
-        .burst-two { left: 76%; top: 30%; animation-delay: .35s; }
-        .burst-three { left: 50%; top: 17%; animation-delay: .7s; }
-        @keyframes firework-bloom {
-            0% { opacity: 0; transform: scale(.15); }
-            18% { opacity: 1; }
-            100% { opacity: 0; transform: scale(5); }
-        }
-        @keyframes dragon-flight {
-            0% { opacity: 0; transform: translate(-90px, 35px) scale(.55) rotate(-12deg); }
-            22%, 75% { opacity: 1; transform: translate(0,0) scale(1) rotate(0); }
-            100% { opacity: 0; transform: translate(100px,-35px) scale(.7) rotate(10deg); }
-        }
-        @keyframes gandalf-caption-pop {
-            from { opacity: 0; transform: translateY(18px) scale(.8); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes gandalf-firework-show {
-            0%, 8% { opacity: 0; }
-            18%, 78% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
         /* Treebeard easter egg */
         .treebeard-encounter {
             position: absolute !important; inset: auto 0 0; z-index: 8;
@@ -746,8 +655,6 @@
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
             *, *::before, *::after { transition-duration: .01ms !important; }
-            .gandalf-cart, .gandalf-wizard, .gandalf-wheel, .gandalf-fireworks.is-visible,
-            .firework-burst, .firework-dragon, .gandalf-fireworks p { animation-duration: .01ms !important; }
         }
     </style>
 </head>
@@ -788,19 +695,6 @@
                 <strong>Древобород</strong>
                 <p id="treebeard-phrase" aria-live="polite"></p>
             </div>
-        </div>
-        <button class="gandalf-cart" id="gandalf-cart" type="button" aria-label="Попасть в Гэндальфа фейерверком" hidden>
-            <span class="gandalf-wizard" aria-hidden="true">🧙🏻‍♂️</span>
-            <span class="gandalf-cart-body" aria-hidden="true"><span class="cart-load">✦</span></span>
-            <span class="gandalf-wheel gandalf-wheel-left" aria-hidden="true"></span>
-            <span class="gandalf-wheel gandalf-wheel-right" aria-hidden="true"></span>
-        </button>
-        <div class="gandalf-fireworks" id="gandalf-fireworks" aria-hidden="true">
-            <span class="firework-burst burst-one"></span>
-            <span class="firework-burst burst-two"></span>
-            <span class="firework-burst burst-three"></span>
-            <span class="firework-dragon" aria-hidden="true">🐉</span>
-            <p>Гэндальф прибыл!</p>
         </div>
     </header>
 
@@ -998,36 +892,6 @@
             });
 
             const logo = document.querySelector(".logo");
-            const gandalfCart = document.getElementById("gandalf-cart");
-            const gandalfFireworks = document.getElementById("gandalf-fireworks");
-            let gandalfCooldown = false;
-            let gandalfFireworkTimer;
-            function summonGandalf() {
-                if (gandalfCooldown) return;
-                gandalfCooldown = true;
-                gandalfCart.hidden = false;
-                gandalfCart.classList.remove("is-riding");
-                void gandalfCart.offsetWidth;
-                gandalfCart.classList.add("is-riding");
-                gandalfCart.style.animation = "none";
-                void gandalfCart.offsetWidth;
-                gandalfCart.style.animation = "";
-                setTimeout(() => { gandalfCart.hidden = true; }, 11200);
-                setTimeout(() => { gandalfCooldown = false; }, 14000);
-            }
-            gandalfCart.addEventListener("click", () => {
-                if (gandalfCart.hidden) return;
-                clearTimeout(gandalfFireworkTimer);
-                gandalfCart.hidden = true;
-                gandalfFireworks.classList.remove("is-visible");
-                void gandalfFireworks.offsetWidth;
-                gandalfFireworks.classList.add("is-visible");
-                gandalfFireworks.setAttribute("aria-hidden", "false");
-                gandalfFireworkTimer = setTimeout(() => {
-                    gandalfFireworks.classList.remove("is-visible");
-                    gandalfFireworks.setAttribute("aria-hidden", "true");
-                }, 3900);
-            });
             const ringOverlay = document.getElementById("ring-easter-egg");
             const ringClose = document.getElementById("ring-close");
             let logoClicks = 0;
@@ -1043,7 +907,6 @@
             logo.addEventListener("click", () => {
                 logoClicks += 1;
                 clearTimeout(logoClickTimer);
-                if (logoClicks === 5) summonGandalf();
                 if (logoClicks >= 7) {
                     logoClicks = 0;
                     openRing();
@@ -1059,7 +922,7 @@
             });
             logo.tabIndex = 0;
             logo.setAttribute("role", "button");
-            logo.setAttribute("aria-label", "Секретная эмблема. Нажми пять раз, чтобы вызвать Гэндальфа");
+            logo.setAttribute("aria-label", "Секретная эмблема Средиземья");
             ringClose.addEventListener("click", closeRing);
             ringOverlay.addEventListener("click", event => {
                 if (event.target === ringOverlay) closeRing();
