@@ -79,11 +79,20 @@
             position: absolute !important; top: -210px; left: 0; right: 0; z-index: 8;
             min-height: 210px; display: flex; align-items: flex-end; justify-content: center;
             gap: clamp(10px, 3vw, 34px); padding: 0 24px 12px;
-            pointer-events: none; opacity: 0; visibility: hidden;
+            pointer-events: none; opacity: 0; visibility: hidden; isolation: isolate; overflow: hidden;
             background: linear-gradient(0deg, rgba(8,15,9,.88), rgba(8,15,9,.48) 62%, transparent);
             transition: opacity 1.6s ease, visibility 1.6s ease;
         }
+        .treebeard-encounter::before {
+            content:""; position:absolute; z-index:0; inset:-35% -15%;
+            background:
+                radial-gradient(ellipse at 28% 78%, rgba(164,190,123,.23), transparent 38%),
+                radial-gradient(ellipse at 72% 88%, rgba(107,145,91,.2), transparent 42%);
+            opacity:0; transform:translateY(22px);
+        }
+        .treebeard-encounter.is-visible::before { animation: treebeard-mist 5s ease-out both; }
         .treebeard-encounter.is-visible { opacity: 1; visibility: visible; }
+        .treebeard-encounter.is-leaving { opacity:0; }
         .treebeard-figure {
             flex: 0 0 auto; width: clamp(105px, 18vw, 175px); height: clamp(145px, 24vw, 220px);
             transform-origin: 50% 100%; filter: drop-shadow(0 0 18px rgba(111,151,83,.32));
@@ -103,11 +112,28 @@
             min-height: 3.2em; margin:0; color:#f0ead5;
             font: 1.02rem/1.65 Georgia,"Times New Roman",serif;
         }
-        .treebeard-encounter.is-visible .treebeard-figure { animation: treebeard-awaken 2.2s ease both; }
+        .treebeard-encounter.is-visible .treebeard-figure {
+            animation: treebeard-awaken 2.2s ease both, treebeard-sway 6s ease-in-out 2.2s infinite;
+        }
+        .treebeard-encounter.is-visible .treebeard-copy { animation: treebeard-copy-glow 4s ease-in-out 2s infinite alternate; }
+        .treebeard-encounter.is-leaving .treebeard-figure { transform:translateY(12px) scale(.97); filter:blur(2px); }
         @keyframes treebeard-awaken {
             0% { opacity:0; transform:translateY(28px) scale(.92); }
             55% { opacity:1; transform:translateY(-5px) scale(1.02); }
             100% { opacity:1; transform:translateY(0) scale(1); }
+        }
+        @keyframes treebeard-sway {
+            0%,100% { transform:translateY(0) rotate(0); }
+            50% { transform:translateY(-3px) rotate(.8deg); }
+        }
+        @keyframes treebeard-mist {
+            0% { opacity:0; transform:translateY(22px); }
+            35%,75% { opacity:1; transform:translateY(0); }
+            100% { opacity:.45; transform:translateY(-8px); }
+        }
+        @keyframes treebeard-copy-glow {
+            from { box-shadow:0 8px 34px rgba(0,0,0,.35), 0 0 0 rgba(133,165,95,0); }
+            to { box-shadow:0 8px 34px rgba(0,0,0,.35), 0 0 24px rgba(133,165,95,.18); }
         }
         @media (max-width: 560px) {
             .treebeard-encounter { top:-190px; min-height:190px; gap:8px; padding:0 10px 10px; }
@@ -116,8 +142,9 @@
             .treebeard-copy p { font-size:.9rem; }
         }
         @media (prefers-reduced-motion: reduce) {
-            .treebeard-encounter { transition:none; }
-            .treebeard-encounter.is-visible .treebeard-figure { animation:none; }
+            .treebeard-encounter, .treebeard-encounter::before { transition:none; animation:none !important; }
+            .treebeard-encounter.is-visible .treebeard-figure,
+            .treebeard-encounter.is-visible .treebeard-copy { animation:none; }
         }
 
         .side-switch {
@@ -921,31 +948,45 @@
             ];
             let treebeardIdleTimer;
             let treebeardHideTimer;
+            let treebeardFarewellTimer;
             let treebeardTypingTimer;
             let treebeardPhraseIndex = -1;
+            function typeTreebeardLine(line, speed = 58) {
+                clearInterval(treebeardTypingTimer);
+                treebeardPhrase.textContent = "";
+                let position = 0;
+                treebeardTypingTimer = setInterval(() => {
+                    treebeardPhrase.textContent = line.slice(0, ++position);
+                    if (position >= line.length) clearInterval(treebeardTypingTimer);
+                }, speed);
+            }
             function hideTreebeard() {
                 clearTimeout(treebeardHideTimer);
+                clearTimeout(treebeardFarewellTimer);
                 clearInterval(treebeardTypingTimer);
+                treebeardEncounter.classList.add("is-leaving");
                 treebeardEncounter.classList.remove("is-visible");
                 treebeardEncounter.setAttribute("aria-hidden", "true");
+                setTimeout(() => treebeardEncounter.classList.remove("is-leaving"), 1700);
             }
             function awakenTreebeard() {
                 let next = Math.floor(Math.random() * treebeardPhrases.length);
                 if (treebeardPhrases.length > 1 && next === treebeardPhraseIndex) next = (next + 1) % treebeardPhrases.length;
                 treebeardPhraseIndex = next;
-                const phrase = treebeardPhrases[next];
+                treebeardEncounter.classList.remove("is-leaving");
                 treebeardPhrase.textContent = "";
                 treebeardEncounter.classList.add("is-visible");
                 treebeardEncounter.setAttribute("aria-hidden", "false");
-                let position = 0;
-                treebeardTypingTimer = setInterval(() => {
-                    treebeardPhrase.textContent = phrase.slice(0, ++position);
-                    if (position >= phrase.length) clearInterval(treebeardTypingTimer);
-                }, 72);
-                treebeardHideTimer = setTimeout(hideTreebeard, 12500);
+                typeTreebeardLine(treebeardPhrases[next], 64);
+                treebeardFarewellTimer = setTimeout(() => {
+                    if (!treebeardEncounter.classList.contains("is-visible")) return;
+                    typeTreebeardLine("«А теперь… мне пора снова слушать шёпот леса. До встречи, путник…»", 62);
+                }, 9500);
+                treebeardHideTimer = setTimeout(hideTreebeard, 14000);
             }
             function resetTreebeardIdleTimer() {
                 clearTimeout(treebeardIdleTimer);
+                clearTimeout(treebeardFarewellTimer);
                 if (treebeardEncounter.classList.contains("is-visible")) hideTreebeard();
                 treebeardIdleTimer = setTimeout(awakenTreebeard, 10000);
             }
