@@ -16,6 +16,7 @@
             --text: #f4f0e6;
             --muted: #b9b5a8;
             --line: rgba(216, 180, 91, .25);
+            --hero-image: url("banner.jpg");
         }
 
         * { box-sizing: border-box; }
@@ -45,7 +46,7 @@
             padding: 72px 24px 110px;
             overflow: hidden;
             isolation: isolate;
-            background: #171812 url("banner.jpg") center 43% / cover no-repeat;
+            background: #171812 var(--hero-image) center 43% / cover no-repeat;
             border-bottom: 1px solid var(--line);
         }
 
@@ -58,6 +59,22 @@
                 linear-gradient(180deg, rgba(10, 12, 9, .25), rgba(10, 12, 9, .48) 45%, var(--bg) 100%),
                 linear-gradient(90deg, rgba(10, 12, 9, .35), transparent 50%, rgba(10, 12, 9, .35));
         }
+
+        .side-switch {
+            position: absolute; top: 22px; right: 24px; z-index: 3;
+            padding: 11px 16px; color: #f6e7bd; background: rgba(12, 14, 11, .78);
+            border: 1px solid rgba(216, 180, 91, .65); border-radius: 999px;
+            font: 700 .88rem "Segoe UI", Arial, sans-serif; cursor: pointer;
+            backdrop-filter: blur(8px); transition: background .2s ease, transform .2s ease;
+        }
+        .side-switch:hover { background: rgba(35, 29, 20, .9); transform: translateY(-2px); }
+        .side-switch:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+        body[data-side="dark"] {
+            --gold: #d98b54; --gold-light: #f0b47d; --line: rgba(217, 112, 65, .3);
+            --hero-image: url("banner-dark.png");
+        }
+        body[data-side="dark"] .intro { background: linear-gradient(145deg, rgba(37, 23, 21, .97), rgba(19, 15, 16, .97)); }
+        body[data-side="dark"] .guide { background: linear-gradient(145deg, rgba(35, 22, 21, .97), rgba(17, 14, 15, .97)); }
 
         .eyebrow {
             margin: 0 0 14px;
@@ -330,6 +347,7 @@
 </head>
 <body>
     <header class="hero">
+        <button class="side-switch" id="side-switch" type="button" aria-pressed="false">☾ Тёмная сторона</button>
         <p class="eyebrow">История начинается здесь</p>
         <h1>Средиземье</h1>
         <div class="ornament" aria-hidden="true"></div>
@@ -394,5 +412,19 @@
         © 2026 <span>Средиземье</span> · Minecraft Roleplay Server
         <p>Исполняйте желания ваших жен</p>
     </footer>
+    <script>
+        (() => {
+            const button = document.getElementById("side-switch");
+            function setSide(side) {
+                const dark = side === "dark";
+                document.body.dataset.side = dark ? "dark" : "light";
+                button.textContent = dark ? "☀ Светлая сторона" : "☾ Тёмная сторона";
+                button.setAttribute("aria-pressed", String(dark));
+                localStorage.setItem("middle-earth-side", side);
+            }
+            setSide(localStorage.getItem("middle-earth-side") === "dark" ? "dark" : "light");
+            button.addEventListener("click", () => setSide(document.body.dataset.side === "dark" ? "light" : "dark"));
+        })();
+    </script>
 </body>
 </html>
