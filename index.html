@@ -907,12 +907,12 @@
                 gollumWhisper.classList.add("is-visible");
                 gollumWhisper.setAttribute("aria-hidden", "false");
                 displayDialogueMessage("Голлум", currentGollumDialogue[0], false);
-                gollumHideTimer = setTimeout(showBilbo, 8000);
+                gollumHideTimer = setTimeout(showBilbo, 5000);
             }
             function showBilbo() {
                 if (!gollumVisible || !currentGollumDialogue) return;
                 displayDialogueMessage("Бильбо Бэггинс", currentGollumDialogue[1], true);
-                gollumHideTimer = setTimeout(showGollum, 8000);
+                gollumHideTimer = setTimeout(showGollum, 5000);
             }
             function resetInactivityTimer() {
                 clearTimeout(inactivityTimer);
