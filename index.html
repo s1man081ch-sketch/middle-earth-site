@@ -901,18 +901,18 @@
                     gollumSpeaker.textContent = "Бильбо Бэггинс";
                     gollumPortrait.classList.add("bilbo-portrait");
                     gollumPhrase.textContent = dialogue[1];
-                }, 2200);
+                }, 5000);
                 gollumHideTimer = setTimeout(() => {
                     hideGollum();
                     resetInactivityTimer();
-                }, 5200);
+                }, 10000);
             }
             function resetInactivityTimer() {
                 clearTimeout(inactivityTimer);
                 clearTimeout(gollumHideTimer);
                 clearTimeout(bilboReplyTimer);
                 if (gollumVisible) hideGollum();
-                inactivityTimer = setTimeout(showGollum, 10000);
+                inactivityTimer = setTimeout(showGollum, 5000);
             }
             ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach(eventName => {
                 document.addEventListener(eventName, resetInactivityTimer, { passive: true });
